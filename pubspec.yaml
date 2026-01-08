@@ -9,6 +9,66 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # 媒体通知.鸿蒙适配
+  audio_service:
+    git:
+      url: https://gitcode.com/openharmony-sig/fluttertpc_audio_service.git
+      path: audio_service
+      ref: br_v0.18.18_ohos
+  audio_session:
+    git:
+      url: https://gitcode.com/openharmony-sig/flutter_audio_session.git
+      ref: br_v0.2.2_ohos
+  shared_preferences: # 存储.鸿蒙适配
+    git:
+      url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
+      path: "packages/shared_preferences/shared_preferences"
+      ref: "br_shared_preferences-v2.5.3_ohos"
+  file_selector: # 文件选择器.鸿蒙适配
+    git:
+      url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
+      path: "packages/file_selector/file_selector"
+      ref: br_file_selector-v1.0.3_ohos
+  url_launcher: # 打开链接.鸿蒙适配
+    git:
+      url: https://gitcode.com/openharmony-tpc/flutter_packages.git
+      path: packages/url_launcher/url_launcher
+      ref: br_url_launcher_v6.3.1_ohos
+   # hive存储，纯dart，支持鸿蒙
+  hive_ce: ^2.16.0
+  hive_ce_flutter: ^2.3.3 
+  audioplayers: # 音频播放.鸿蒙适配
+    git:
+      url: https://gitcode.com/openharmony-sig/flutter_audioplayers.git
+      path: packages/audioplayers
+      ref: br_v6.5.0_ohos
+
+dependency_overrides:
+  path_provider: # 应用可用路径.鸿蒙适配
+    git:
+      url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
+      path: "packages/path_provider/path_provider"
+  # 媒体.鸿蒙适配
+  media_kit:
+    git:
+      url: https://github.com/ErBWs/media-kit.git
+      ref: feat-ohos
+      path: ./media_kit
+  media_kit_libs_ohos:
+    git:
+      url: https://github.com/ErBWs/media-kit.git
+      ref: feat-ohos
+      path: ./libs/ohos/media_kit_libs_ohos
+  media_kit_video:
+    git:
+      url: https://github.com/ErBWs/media-kit.git
+      ref: feat-ohos
+      path: ./media_kit_video
+  media_kit_libs_video:
+    git:
+      url: https://github.com/ErBWs/media-kit.git
+      ref: feat-ohos
+      path: ./libs/universal/media_kit_libs_video
 
 dev_dependencies:
   flutter_test:
