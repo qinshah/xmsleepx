@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
@@ -53,7 +54,13 @@ class Sound {
 
   /// 初始化扫描所有音频文件
   static Future<void> scanAssets() async {
-    allSounds = await _scanAssetsDirectory('assets/sounds');
+    // 使用 compute 将扫描操作放到 isolate 中
+    allSounds = await compute(_scanAssetsDirectoryIsolate, 'assets/sounds');
+  }
+
+  /// 在 isolate 中扫描 assets 目录
+  static Future<List<Sound>> _scanAssetsDirectoryIsolate(String path) async {
+    return await _scanAssetsDirectory(path);
   }
 
   /// 扫描 assets 目录下的所有音频文件，并对 AssetManifest 做更健壮的解析
@@ -67,7 +74,12 @@ class Sound {
     _scannedPaths.add(path);
 
     try {
-      // 使用 rootBundle 获取 assets 清单
+      // 首先尝试直接使用硬编码列表（避免 AssetManifest.json 解析的卡顿）
+      if (_fallbackSounds.isNotEmpty) {
+        return _fallbackSounds;
+      }
+
+      // 如果硬编码列表为空，再尝试解析 AssetManifest
       final manifest = await rootBundle.loadString('AssetManifest.json');
 
       // 兼容 AssetManifest 的不同结构（有时候是 Map，有时候是 List）
@@ -113,7 +125,6 @@ class Sound {
     } catch (e) {
       // 如果无法加载 AssetManifest.json，回退到硬编码列表
       debugPrint('无法加载 AssetManifest.json: $e');
-      sounds.addAll(_fallbackSounds);
     }
 
     // If manifest exists but no sounds found, fall back to built-in samples

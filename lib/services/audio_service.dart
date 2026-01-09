@@ -62,13 +62,16 @@ class AudioService {
       await player.setSource(AssetSource(sound.url.replaceFirst('assets/', '')));
       await player.resume();
 
+      // 监听播放状态变化
       player.onPlayerStateChanged.listen((state) {
-        info.isPlaying = state == PlayerState.playing;
-        _notifyChange();
+        if (info.isPlaying != (state == PlayerState.playing)) {
+          info.isPlaying = state == PlayerState.playing;
+          _notifyChange();
+        }
       });
 
       player.onDurationChanged.listen((_) {
-        _notifyChange();
+        // 不需要频繁通知，除非有特殊需求
       });
 
       _players[sound.id] = info;
@@ -115,8 +118,12 @@ class AudioService {
   Future<void> stop(String soundId) async {
     final info = _players[soundId];
     if (info != null) {
-      await info.player.stop();
-      await info.player.dispose();
+      try {
+        await info.player.stop();
+        await info.player.dispose();
+      } catch (e) {
+        // 忽略销毁时的错误
+      }
       _players.remove(soundId);
       _notifyChange();
     }
@@ -124,10 +131,18 @@ class AudioService {
 
   /// 停止所有音频
   Future<void> stopAll() async {
-    for (final info in _players.values) {
-      await info.player.stop();
-      await info.player.dispose();
-    }
+    final infos = List<PlayingInfo>.from(_players.values);
+    
+    // 并行停止所有音频
+    await Future.wait(infos.map((info) async {
+      try {
+        await info.player.stop();
+        await info.player.dispose();
+      } catch (e) {
+        // 忽略销毁时的错误
+      }
+    }));
+    
     _players.clear();
     _notifyChange();
   }
@@ -158,7 +173,12 @@ class AudioService {
   }
 
   void _notifyChange() {
-    _onChangeController.add(_players.values.toList());
+    // 防抖处理，避免频繁更新
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (!_onChangeController.isClosed) {
+        _onChangeController.add(_players.values.toList());
+      }
+    });
   }
 
   /// 释放资源

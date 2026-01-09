@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
@@ -15,15 +16,27 @@ class PlayerPage extends StatefulWidget {
 
 class _PlayerPageState extends State<PlayerPage> {
   final AudioService _audioService = AudioService();
+  late StreamSubscription _audioSubscription;
+  bool _isPlaying = false;
 
   @override
   void initState() {
     super.initState();
     _audioService.play(widget.sound);
+    
+    // 监听音频状态变化
+    _audioSubscription = _audioService.onChange.listen((_) {
+      if (mounted) {
+        setState(() {
+          _isPlaying = _audioService.isPlaying(widget.sound.id);
+        });
+      }
+    });
   }
 
   @override
   void dispose() {
+    _audioSubscription.cancel();
     super.dispose();
   }
 
@@ -98,7 +111,7 @@ class _PlayerPageState extends State<PlayerPage> {
                       heroTag: 'play',
                       onPressed: () => _audioService.toggle(widget.sound.id),
                       child: Icon(
-                        _audioService.isPlaying(widget.sound.id)
+                        _isPlaying
                             ? Icons.pause
                             : Icons.play_arrow,
                       ),
