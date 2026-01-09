@@ -270,6 +270,15 @@ class _SoundCardState extends State<SoundCard> {
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
+            // 如果未播放则添加到播放列表并播放，已播放则停止并从列表移除
+            if (_audioService.hasSound(widget.sound.id)) {
+              _audioService.stop(widget.sound.id);
+            } else {
+              _audioService.play(widget.sound);
+            }
+          },
+          onLongPress: () {
+            // 长按跳转到播放页面
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => PlayerPage(sound: widget.sound)),
@@ -465,22 +474,104 @@ class _PlayingListSheetState extends State<PlayingListSheet> {
                     itemCount: playingList.length,
                     itemBuilder: (context, idx) {
                       final info = playingList[idx];
-                      return ListTile(
-                        leading: Icon(Icons.audiotrack),
-                        title: Text(info.name),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
+                      return Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surface,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                          ),
+                        ),
+                        child: Column(
                           children: [
-                            IconButton(
-                              icon: Icon(
-                                info.isPlaying ? Icons.pause : Icons.play_arrow,
+                            ListTile(
+                              leading: Icon(
+                                Icons.audiotrack,
+                                color: info.isPlaying 
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Theme.of(context).colorScheme.onSurfaceVariant,
                               ),
-                              onPressed: () => widget.audioService.toggle(info.id),
+                              title: Text(
+                                info.name,
+                                style: TextStyle(
+                                  fontWeight: info.isPlaying ? FontWeight.w600 : FontWeight.w500,
+                                  color: info.isPlaying 
+                                      ? Theme.of(context).colorScheme.primary
+                                      : Theme.of(context).colorScheme.onSurface,
+                                ),
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: Icon(
+                                      info.isPlaying ? Icons.pause : Icons.play_arrow,
+                                    ),
+                                    onPressed: () => widget.audioService.toggle(info.id),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.stop),
+                                    onPressed: () => widget.audioService.stop(info.id),
+                                  ),
+                                ],
+                              ),
                             ),
-                            IconButton(
-                              icon: const Icon(Icons.stop),
-                              onPressed: () => widget.audioService.stop(info.id),
-                            ),
+                            // 音量调节滑块
+                            if (widget.audioService.hasSound(info.id))
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.volume_down,
+                                      size: 20,
+                                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: SliderTheme(
+                                        data: SliderTheme.of(context).copyWith(
+                                          trackHeight: 4,
+                                          thumbShape: const RoundSliderThumbShape(
+                                            enabledThumbRadius: 8,
+                                          ),
+                                          overlayShape: const RoundSliderOverlayShape(
+                                            overlayRadius: 12,
+                                          ),
+                                        ),
+                                        child: Slider(
+                                          value: info.volume,
+                                          min: 0,
+                                          max: 1,
+                                          divisions: 20,
+                                          onChanged: (value) {
+                                            widget.audioService.setVolume(info.id, value);
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Icon(
+                                      Icons.volume_up,
+                                      size: 20,
+                                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    SizedBox(
+                                      width: 32,
+                                      child: Text(
+                                        '${(info.volume * 100).round()}%',
+                                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                           ],
                         ),
                       );

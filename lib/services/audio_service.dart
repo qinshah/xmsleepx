@@ -60,6 +60,10 @@ class AudioService {
 
     try {
       await player.setSource(AssetSource(sound.url.replaceFirst('assets/', '')));
+      
+      // 设置为循环播放
+      await player.setReleaseMode(ReleaseMode.loop);
+      
       await player.resume();
 
       // 监听播放状态变化

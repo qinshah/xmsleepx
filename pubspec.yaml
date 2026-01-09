@@ -40,6 +40,7 @@ dependencies:
   hive_ce: ^2.16.0
   hive_ce_flutter: ^2.3.3 
   audioplayers: ^6.5.0
+  package_info_plus: ^8.0.2
   # audioplayers: # 音频播放.鸿蒙适配
   #   git:
   #     url: https://gitcode.com/openharmony-sig/flutter_audioplayers.git

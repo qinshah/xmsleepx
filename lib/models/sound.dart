@@ -907,11 +907,14 @@ class Sound {
 
   /// 获取所有分类
   static List<String> getCategories() {
-    final categories = <String>{'全部'};
+    final categories = <String>{};
     for (final sound in allSounds) {
-      categories.add(sound.category);
+      if (sound.category != '全部') {
+        categories.add(sound.category);
+      }
     }
-    return categories.toList()..sort();
+    final sortedCategories = categories.toList()..sort();
+    return ['全部', ...sortedCategories];
   }
 
   /// 根据分类筛选
