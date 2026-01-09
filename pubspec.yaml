@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # audio_service: ^0.18.18
+  # audio_session: ^0.2.2
   # 媒体通知.鸿蒙适配
   audio_service:
     git:
@@ -37,11 +39,12 @@ dependencies:
    # hive存储，纯dart，支持鸿蒙
   hive_ce: ^2.16.0
   hive_ce_flutter: ^2.3.3 
-  audioplayers: # 音频播放.鸿蒙适配
-    git:
-      url: https://gitcode.com/openharmony-sig/flutter_audioplayers.git
-      path: packages/audioplayers
-      ref: br_v6.5.0_ohos
+  audioplayers: ^6.5.0
+  # audioplayers: # 音频播放.鸿蒙适配
+  #   git:
+  #     url: https://gitcode.com/openharmony-sig/flutter_audioplayers.git
+  #     path: packages/audioplayers
+  #     ref: br_v6.5.0_ohos
 
 dependency_overrides:
   path_provider: # 应用可用路径.鸿蒙适配
@@ -77,3 +80,13 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/sounds/animals/
+    - assets/sounds/music/
+    - assets/sounds/nature/
+    - assets/sounds/noise/
+    - assets/sounds/places/
+    - assets/sounds/rain/
+    - assets/sounds/things/
+    - assets/sounds/transport/
+    - assets/sounds/urban/
