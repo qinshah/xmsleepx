@@ -62,13 +62,14 @@ packages:
   audioplayers:
     dependency: "direct main"
     description:
-      name: audioplayers
-      sha256: "5441fa0ceb8807a5ad701199806510e56afde2b4913d9d17c2f19f2902cf0ae4"
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "6.5.1"
+      path: "packages/audioplayers"
+      ref: "br_v6.5.0_ohos"
+      resolved-ref: "3e8231a252eed6cc2ad0fbf48d6b5a6b91aa4a5e"
+      url: "https://gitcode.com/openharmony-sig/flutter_audioplayers.git"
+    source: git
+    version: "6.5.0"
   audioplayers_android:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: audioplayers_android
       sha256: "60a6728277228413a85755bd3ffd6fab98f6555608923813ce383b190a360605"
@@ -78,21 +79,32 @@ packages:
   audioplayers_darwin:
     dependency: transitive
     description:
-      name: audioplayers_darwin
-      sha256: "0811d6924904ca13f9ef90d19081e4a87f7297ddc19fc3d31f60af1aaafee333"
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "6.3.0"
+      path: "packages/audioplayers_darwin"
+      ref: HEAD
+      resolved-ref: e566d678531badc1437ada9fcca87c23d6355ba4
+      url: "https://gitcode.com/openharmony-sig/flutter_audioplayers.git"
+    source: git
+    version: "4.1.0"
   audioplayers_linux:
     dependency: transitive
     description:
-      name: audioplayers_linux
-      sha256: f75bce1ce864170ef5e6a2c6a61cd3339e1a17ce11e99a25bae4474ea491d001
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "4.2.1"
-  audioplayers_platform_interface:
+      path: "packages/audioplayers_linux"
+      ref: HEAD
+      resolved-ref: e566d678531badc1437ada9fcca87c23d6355ba4
+      url: "https://gitcode.com/openharmony-sig/flutter_audioplayers.git"
+    source: git
+    version: "2.1.0"
+  audioplayers_ohos:
     dependency: transitive
+    description:
+      path: "packages/audioplayers_ohos"
+      ref: HEAD
+      resolved-ref: e566d678531badc1437ada9fcca87c23d6355ba4
+      url: "https://gitcode.com/openharmony-sig/flutter_audioplayers.git"
+    source: git
+    version: "3.0.2"
+  audioplayers_platform_interface:
+    dependency: "direct overridden"
     description:
       name: audioplayers_platform_interface
       sha256: "0e2f6a919ab56d0fec272e801abc07b26ae7f31980f912f24af4748763e5a656"
@@ -102,19 +114,21 @@ packages:
   audioplayers_web:
     dependency: transitive
     description:
-      name: audioplayers_web
-      sha256: "1c0f17cec68455556775f1e50ca85c40c05c714a99c5eb1d2d57cc17ba5522d7"
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "5.1.1"
+      path: "packages/audioplayers_web"
+      ref: HEAD
+      resolved-ref: e566d678531badc1437ada9fcca87c23d6355ba4
+      url: "https://gitcode.com/openharmony-sig/flutter_audioplayers.git"
+    source: git
+    version: "3.1.0"
   audioplayers_windows:
     dependency: transitive
     description:
-      name: audioplayers_windows
-      sha256: "4048797865105b26d47628e6abb49231ea5de84884160229251f37dfcbe52fd7"
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "4.2.1"
+      path: "packages/audioplayers_windows"
+      ref: HEAD
+      resolved-ref: e566d678531badc1437ada9fcca87c23d6355ba4
+      url: "https://gitcode.com/openharmony-sig/flutter_audioplayers.git"
+    source: git
+    version: "2.0.2"
   boolean_selector:
     dependency: transitive
     description:

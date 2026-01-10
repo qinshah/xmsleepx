@@ -1,7 +1,7 @@
 name: xmsleepx
 description: "A new Flutter project."
 publish_to: 'none'
-version: 0.1.0
+version: 0.9.9+1
 
 environment:
   sdk: ^3.9.2
@@ -39,15 +39,17 @@ dependencies:
    # hive存储，纯dart，支持鸿蒙
   hive_ce: ^2.16.0
   hive_ce_flutter: ^2.3.3 
-  audioplayers: ^6.5.0
   package_info_plus: ^8.0.2
-  # audioplayers: # 音频播放.鸿蒙适配
-  #   git:
-  #     url: https://gitcode.com/openharmony-sig/flutter_audioplayers.git
-  #     path: packages/audioplayers
-  #     ref: br_v6.5.0_ohos
+  audioplayers: # 音频播放.鸿蒙适配
+    git:
+      url: https://gitcode.com/openharmony-sig/flutter_audioplayers.git
+      path: packages/audioplayers
+      ref: br_v6.5.0_ohos
 
 dependency_overrides:
+  # 修复鸿蒙audioplayers报错
+  audioplayers_android: ^5.2.1
+  audioplayers_platform_interface: ^7.1.1
   path_provider: # 应用可用路径.鸿蒙适配
     git:
       url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
