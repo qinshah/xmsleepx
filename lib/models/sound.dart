@@ -905,16 +905,45 @@ class Sound {
         .join(' ');
   }
 
-  /// 获取所有分类
+  /// 所有音频分类（按Android版本顺序排列）
+  static const List<String> allCategories = [
+    '自然',
+    '雨声', 
+    '城市',
+    '场所',
+    '交通',
+    '物品',
+    '白噪音',
+    '动物',
+    '音乐',
+  ];
+
+  /// 获取所有分类（按Android版本顺序排列）
   static List<String> getCategories() {
+    // 按Android版本的顺序排列分类
     final categories = <String>{};
     for (final sound in allSounds) {
       if (sound.category != '全部') {
         categories.add(sound.category);
       }
     }
-    final sortedCategories = categories.toList()..sort();
-    return ['全部', ...sortedCategories];
+    
+    // 按Android顺序排列，如果分类不在预定义顺序中，则按字母顺序排在后面
+    final sortedCategories = <String>['全部'];
+    for (final category in allCategories) {
+      if (categories.contains(category)) {
+        sortedCategories.add(category);
+        categories.remove(category);
+      }
+    }
+    
+    // 添加剩余的分类（按字母顺序）
+    if (categories.isNotEmpty) {
+      final remaining = categories.toList()..sort();
+      sortedCategories.addAll(remaining);
+    }
+    
+    return sortedCategories;
   }
 
   /// 根据分类筛选

@@ -13,7 +13,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final AudioService _audioService = AudioService();
-  int _selectedCategory = 0;
+  int _selectedCategory = 0; // 0 = 全部
   bool _isLoading = true;
 
   @override
@@ -225,6 +225,17 @@ class _SoundCardState extends State<SoundCard> {
       }
     });
   }
+  
+  // 当widget的依赖项变化时重新检查播放状态
+  @override
+  void didUpdateWidget(SoundCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.sound.id != widget.sound.id) {
+      setState(() {
+        _isPlaying = _audioService.isPlaying(widget.sound.id);
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -270,7 +281,7 @@ class _SoundCardState extends State<SoundCard> {
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
-            // 如果未播放则添加到播放列表并播放，已播放则停止并从列表移除
+            // 如果未播放则播放，已播放则停止并从列表移除
             if (_audioService.hasSound(widget.sound.id)) {
               _audioService.stop(widget.sound.id);
             } else {
@@ -338,13 +349,13 @@ class _SoundCardState extends State<SoundCard> {
                             ),
                           ),
                         ),
-                      // 快速播放/暂停按钮
+                      // 快速停止按钮（移除暂停功能）
                       Positioned(
                         bottom: -4,
                         right: -4,
                         child: GestureDetector(
                           onTap: () {
-                            _audioService.toggle(widget.sound.id);
+                            _audioService.stop(widget.sound.id);
                           },
                           child: Container(
                             width: 28,
@@ -365,7 +376,7 @@ class _SoundCardState extends State<SoundCard> {
                               ],
                             ),
                             child: Icon(
-                              _isPlaying ? Icons.pause : Icons.play_arrow,
+                              Icons.stop,
                               size: 14,
                               color: Colors.white,
                             ),
@@ -456,7 +467,18 @@ class _PlayingListSheetState extends State<PlayingListSheet> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('正在播放', style: Theme.of(context).textTheme.titleLarge),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('正在播放', style: Theme.of(context).textTheme.titleLarge),
+                    Text(
+                      '${playingList.length} 个声音',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
                 TextButton(
                   onPressed: () async {
                     await widget.audioService.stopAll();
@@ -504,12 +526,6 @@ class _PlayingListSheetState extends State<PlayingListSheet> {
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  IconButton(
-                                    icon: Icon(
-                                      info.isPlaying ? Icons.pause : Icons.play_arrow,
-                                    ),
-                                    onPressed: () => widget.audioService.toggle(info.id),
-                                  ),
                                   IconButton(
                                     icon: const Icon(Icons.stop),
                                     onPressed: () => widget.audioService.stop(info.id),

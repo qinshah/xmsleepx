@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../config/theme.dart';
+import '../../services/audio_service.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -14,9 +15,10 @@ class _SettingsPageState extends State<SettingsPage> {
   bool _hideAnimation = false;
   String _version = '1.0.0';
   ThemeMode _themeMode = ThemeMode.system;
-  double _globalVolume = 0.5;
+  double _globalVolume = 0.5; // 默认音量50%
   bool _isClearingCache = false;
   int _cacheSize = 0;
+  final AudioService _audioService = AudioService();
 
   @override
   void initState() {
@@ -28,6 +30,8 @@ class _SettingsPageState extends State<SettingsPage> {
     final packageInfo = await PackageInfo.fromPlatform();
     setState(() {
       _version = packageInfo.version;
+      // 从 AudioService 获取当前全局音量
+      _globalVolume = _audioService.globalVolume;
     });
     _calculateCacheSize();
   }
@@ -447,6 +451,8 @@ class _SettingsPageState extends State<SettingsPage> {
                     divisions: 20,
                     onChanged: (value) {
                       setState(() => localVolume = value);
+                      // 实时更新全局音量
+                      _audioService.setGlobalVolume(value);
                       this.setState(() => _globalVolume = value);
                     },
                   ),
