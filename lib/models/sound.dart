@@ -135,208 +135,450 @@ class Sound {
     return sounds;
   }
 
-  /// 硬编码的音频列表（备选方案）
-  static final List<Sound> _fallbackSounds = [
-    // Rain sounds
+  /// Android版本繁星页的16个声音（按顺序排列）
+  static final List<Sound> _androidStarSounds = [
+    // 1. 伞上雨声
     Sound(
-      id: 'rain_drizzle',
-      name: 'Drizzle',
-      url: 'assets/sounds/rain/drizzle.ogg',
+      id: 'rain_umbrella_rain',
+      name: '伞上雨声',
+      url: 'assets/sounds/rain/rain-on-umbrella.ogg',
       category: '雨声',
       icon: Icons.water_drop,
     ),
+    // 2. 划船
+    Sound(
+      id: 'transport_rowing_boat',
+      name: '划船',
+      url: 'assets/sounds/transport/rowing-boat.mp3',
+      category: '交通',
+      icon: Icons.sailing,
+    ),
+    // 3. 办公室
+    Sound(
+      id: 'places_office',
+      name: '办公室',
+      url: 'assets/sounds/places/office.mp3',
+      category: '场所',
+      icon: Icons.computer,
+    ),
+    // 4. 图书馆
+    Sound(
+      id: 'places_library',
+      name: '图书馆',
+      url: 'assets/sounds/places/library.mp3',
+      category: '场所',
+      icon: Icons.library_books,
+    ),
+    // 5. 大雨
     Sound(
       id: 'rain_heavy_rain',
-      name: 'Heavy Rain',
+      name: '大雨',
       url: 'assets/sounds/rain/heavy_rain.ogg',
       category: '雨声',
       icon: Icons.water_drop,
     ),
+    // 6. 打字机
     Sound(
-      id: 'rain_heavy_rain_on_glass',
-      name: 'Heavy Rain On Glass',
-      url: 'assets/sounds/rain/heavy-rain-on-glass.ogg',
+      id: 'things_typewriter',
+      name: '打字机',
+      url: 'assets/sounds/things/typewriter.mp3',
+      category: '物品',
+      icon: Icons.keyboard,
+    ),
+    // 7. 打雷
+    Sound(
+      id: 'rain_thunderstorm',
+      name: '打雷',
+      url: 'assets/sounds/rain/thunderstorm.ogg',
       category: '雨声',
+      icon: Icons.thunderstorm,
+    ),
+    // 8. 时钟
+    Sound(
+      id: 'things_clock',
+      name: '时钟',
+      url: 'assets/sounds/things/clock.mp3',
+      category: '物品',
+      icon: Icons.access_time,
+    ),
+    // 9. 森林鸟鸣
+    Sound(
+      id: 'animals_birds',
+      name: '森林鸟鸣',
+      url: 'assets/sounds/animals/birds.ogg',
+      category: '动物',
+      icon: Icons.pets,
+    ),
+    // 10. 漂流
+    Sound(
+      id: 'transport_sailboat',
+      name: '漂流',
+      url: 'assets/sounds/transport/sailboat.mp3',
+      category: '交通',
+      icon: Icons.sailing,
+    ),
+    // 11. 篝火
+    Sound(
+      id: 'nature_campfire',
+      name: '篝火',
+      url: 'assets/sounds/nature/campfire.ogg',
+      category: '自然',
+      icon: Icons.local_fire_department,
+    ),
+    // 12. 起风了
+    Sound(
+      id: 'nature_wind',
+      name: '起风了',
+      url: 'assets/sounds/nature/wind.ogg',
+      category: '自然',
+      icon: Icons.air,
+    ),
+    // 13. 键盘
+    Sound(
+      id: 'things_keyboard',
+      name: '键盘',
+      url: 'assets/sounds/things/keyboard.mp3',
+      category: '物品',
+      icon: Icons.keyboard,
+    ),
+    // 14. 雪地徒步
+    Sound(
+      id: 'nature_walk_in_snow',
+      name: '雪地徒步',
+      url: 'assets/sounds/nature/walk-in-snow.ogg',
+      category: '自然',
+      icon: Icons.ac_unit,
+    ),
+    // 15. 早晨咖啡
+    Sound(
+      id: 'places_cafe',
+      name: '早晨咖啡',
+      url: 'assets/sounds/places/cafe.mp3',
+      category: '场所',
+      icon: Icons.local_cafe,
+    ),
+    // 16. 吊扇
+    Sound(
+      id: 'things_ceiling_fan',
+      name: '吊扇',
+      url: 'assets/sounds/things/ceiling-fan.mp3',
+      category: '物品',
+      icon: Icons.air,
+    ),
+  ];
+  /// 完整的音频列表（按Android版本order顺序排列）
+  static final List<Sound> _fallbackSounds = [
+    // 自然声音 (按Android版本order顺序)
+    Sound(
+      id: 'nature_river',
+      name: '河流',
+      url: 'assets/sounds/nature/river.ogg',
+      category: '自然',
+      icon: Icons.water,
+    ),
+    Sound(
+      id: 'nature_waves',
+      name: '海浪',
+      url: 'assets/sounds/nature/waves.ogg',
+      category: '自然',
+      icon: Icons.waves,
+    ),
+    Sound(
+      id: 'nature_campfire',
+      name: '篝火',
+      url: 'assets/sounds/nature/campfire.ogg',
+      category: '自然',
+      icon: Icons.local_fire_department,
+    ),
+    Sound(
+      id: 'nature_wind',
+      name: '风声',
+      url: 'assets/sounds/nature/wind.ogg',
+      category: '自然',
+      icon: Icons.air,
+    ),
+    Sound(
+      id: 'nature_howling_wind',
+      name: '呼啸的风',
+      url: 'assets/sounds/nature/howling-wind.ogg',
+      category: '自然',
+      icon: Icons.air,
+    ),
+    Sound(
+      id: 'nature_wind_in_trees',
+      name: '树间风声',
+      url: 'assets/sounds/nature/wind-in-trees.ogg',
+      category: '自然',
+      icon: Icons.terrain,
+    ),
+    Sound(
+      id: 'nature_waterfall',
+      name: '瀑布',
+      url: 'assets/sounds/nature/waterfall.ogg',
+      category: '自然',
+      icon: Icons.water,
+    ),
+    Sound(
+      id: 'nature_walk_in_snow',
+      name: '雪中行走',
+      url: 'assets/sounds/nature/walk-in-snow.ogg',
+      category: '自然',
+      icon: Icons.ac_unit,
+    ),
+    Sound(
+      id: 'nature_walk_on_leaves',
+      name: '踩踏树叶',
+      url: 'assets/sounds/nature/walk-on-leaves.ogg',
+      category: '自然',
+      icon: Icons.grass,
+    ),
+    Sound(
+      id: 'nature_walk_on_gravel',
+      name: '踩踏碎石',
+      url: 'assets/sounds/nature/walk-on-gravel.ogg',
+      category: '自然',
+      icon: Icons.directions_walk,
+    ),
+    Sound(
+      id: 'nature_droplets',
+      name: '水滴',
+      url: 'assets/sounds/nature/droplets.ogg',
+      category: '自然',
       icon: Icons.water_drop,
     ),
     Sound(
+      id: 'nature_jungle',
+      name: '丛林',
+      url: 'assets/sounds/nature/jungle.ogg',
+      category: '自然',
+      icon: Icons.park,
+    ),
+    Sound(
+      id: 'music_field',
+      name: '田野',
+      url: 'assets/sounds/music/田野.mp3',
+      category: '音乐',
+      icon: Icons.music_note,
+    ),
+    // 雨声 (按Android版本order顺序)
+    Sound(
       id: 'rain_light_rain',
-      name: 'Light Rain',
+      name: '小雨',
       url: 'assets/sounds/rain/light-rain.ogg',
       category: '雨声',
       icon: Icons.water_drop,
     ),
     Sound(
+      id: 'rain_heavy_rain',
+      name: '大雨',
+      url: 'assets/sounds/rain/heavy_rain.ogg',
+      category: '雨声',
+      icon: Icons.water_drop,
+    ),
+    Sound(
       id: 'rain_rain_on_car_roof',
-      name: 'Rain On Car Roof',
+      name: '车顶雨声',
       url: 'assets/sounds/rain/rain-on-car-roof.ogg',
       category: '雨声',
       icon: Icons.water_drop,
     ),
     Sound(
-      id: 'rain_rain_on_eaves',
-      name: 'Rain On Eaves',
-      url: 'assets/sounds/rain/rain-on-eaves.mp3',
+      id: 'rain_rain_on_umbrella',
+      name: '伞上雨声',
+      url: 'assets/sounds/rain/rain-on-umbrella.ogg',
       category: '雨声',
       icon: Icons.water_drop,
     ),
     Sound(
-      id: 'rain_rain_on_empty_street',
-      name: 'Rain On Empty Street',
-      url: 'assets/sounds/rain/rain-on-empty-street.ogg',
+      id: 'rain_rain_on_tent',
+      name: '帐篷雨声',
+      url: 'assets/sounds/rain/rain-on-tent.ogg',
       category: '雨声',
       icon: Icons.water_drop,
     ),
     Sound(
       id: 'rain_rain_on_leaves',
-      name: 'Rain On Leaves',
+      name: '叶上雨声',
       url: 'assets/sounds/rain/rain-on-leaves.ogg',
       category: '雨声',
       icon: Icons.water_drop,
     ),
     Sound(
       id: 'rain_rain_on_raincoat',
-      name: 'Rain On Raincoat',
+      name: '雨落雨披',
       url: 'assets/sounds/rain/rain-on-raincoat.mp3',
       category: '雨声',
       icon: Icons.water_drop,
     ),
     Sound(
-      id: 'rain_rain_on_tent',
-      name: 'Rain On Tent',
-      url: 'assets/sounds/rain/rain-on-tent.ogg',
-      category: '雨声',
-      icon: Icons.water_drop,
-    ),
-    Sound(
-      id: 'rain_rain_on_umbrella',
-      name: 'Rain On Umbrella',
-      url: 'assets/sounds/rain/rain-on-umbrella.ogg',
-      category: '雨声',
-      icon: Icons.water_drop,
-    ),
-    Sound(
       id: 'rain_rain_on_windowsill',
-      name: 'Rain On Windowsill',
+      name: '雨打窗台',
       url: 'assets/sounds/rain/rain-on-windowsill.mp3',
       category: '雨声',
       icon: Icons.water_drop,
     ),
     Sound(
       id: 'rain_rain_on_wooden_house',
-      name: 'Rain On Wooden House',
+      name: '雨敲木屋',
       url: 'assets/sounds/rain/rain-on-wooden-house.mp3',
       category: '雨声',
       icon: Icons.water_drop,
     ),
     Sound(
+      id: 'rain_thunderstorm',
+      name: '雷雨声',
+      url: 'assets/sounds/rain/thunderstorm.ogg',
+      category: '雨声',
+      icon: Icons.thunderstorm,
+    ),
+    Sound(
       id: 'rain_rain_while_driving',
-      name: 'Rain While Driving',
+      name: '开车时遇雨',
       url: 'assets/sounds/rain/rain-while-driving.mp3',
       category: '雨声',
       icon: Icons.water_drop,
     ),
     Sound(
-      id: 'rain_thunderstorm',
-      name: 'Thunderstorm',
-      url: 'assets/sounds/rain/thunderstorm.ogg',
+      id: 'rain_rain_on_empty_street',
+      name: '空荡街道的雨',
+      url: 'assets/sounds/rain/rain-on-empty-street.ogg',
       category: '雨声',
-      icon: Icons.thunderstorm,
-    ),
-
-    // Nature sounds
-    Sound(
-      id: 'nature_campfire',
-      name: 'Campfire',
-      url: 'assets/sounds/nature/campfire.ogg',
-      category: '自然',
-      icon: Icons.local_fire_department,
-    ),
-    Sound(
-      id: 'nature_droplets',
-      name: 'Droplets',
-      url: 'assets/sounds/nature/droplets.ogg',
-      category: '自然',
       icon: Icons.water_drop,
     ),
     Sound(
-      id: 'nature_howling_wind',
-      name: 'Howling Wind',
-      url: 'assets/sounds/nature/howling-wind.ogg',
-      category: '自然',
-      icon: Icons.air,
+      id: 'rain_drizzle',
+      name: '绵绵细雨',
+      url: 'assets/sounds/rain/drizzle.ogg',
+      category: '雨声',
+      icon: Icons.water_drop,
     ),
     Sound(
-      id: 'nature_jungle',
-      name: 'Jungle',
-      url: 'assets/sounds/nature/jungle.ogg',
-      category: '自然',
-      icon: Icons.park,
+      id: 'rain_rain_on_eaves',
+      name: '屋檐落雨',
+      url: 'assets/sounds/rain/rain-on-eaves.mp3',
+      category: '雨声',
+      icon: Icons.water_drop,
     ),
     Sound(
-      id: 'nature_river',
-      name: 'River',
-      url: 'assets/sounds/nature/river.ogg',
-      category: '自然',
-      icon: Icons.water,
-    ),
-    Sound(
-      id: 'nature_walk_in_snow',
-      name: 'Walk In Snow',
-      url: 'assets/sounds/nature/walk-in-snow.ogg',
-      category: '自然',
-      icon: Icons.ac_unit,
-    ),
-    Sound(
-      id: 'nature_walk_on_gravel',
-      name: 'Walk On Gravel',
-      url: 'assets/sounds/nature/walk-on-gravel.ogg',
-      category: '自然',
-      icon: Icons.directions_walk,
-    ),
-    Sound(
-      id: 'nature_walk_on_leaves',
-      name: 'Walk On Leaves',
-      url: 'assets/sounds/nature/walk-on-leaves.ogg',
-      category: '自然',
-      icon: Icons.grass,
-    ),
-    Sound(
-      id: 'nature_waterfall',
-      name: 'Waterfall',
-      url: 'assets/sounds/nature/waterfall.ogg',
-      category: '自然',
-      icon: Icons.water,
-    ),
-    Sound(
-      id: 'nature_waves',
-      name: 'Waves',
-      url: 'assets/sounds/nature/waves.ogg',
-      category: '自然',
-      icon: Icons.waves,
-    ),
-    Sound(
-      id: 'nature_wind_in_trees',
-      name: 'Wind In Trees',
-      url: 'assets/sounds/nature/wind-in-trees.ogg',
-      category: '自然',
-      icon: Icons.terrain,
-    ),
-    Sound(
-      id: 'nature_wind',
-      name: 'Wind',
-      url: 'assets/sounds/nature/wind.ogg',
-      category: '自然',
-      icon: Icons.air,
+      id: 'rain_heavy_rain_on_glass',
+      name: '大雨落玻璃',
+      url: 'assets/sounds/rain/heavy-rain-on-glass.ogg',
+      category: '雨声',
+      icon: Icons.water_drop,
     ),
 
-    // Noise sounds
+    // 动物声音 (按Android版本order顺序)
     Sound(
-      id: 'noise_brown_noise',
-      name: 'Brown Noise',
-      url: 'assets/sounds/noise/brown-noise.ogg',
-      category: '白噪音',
-      icon: Icons.graphic_eq,
+      id: 'animals_birds',
+      name: '鸟鸣',
+      url: 'assets/sounds/animals/birds.ogg',
+      category: '动物',
+      icon: Icons.pets,
+    ),
+    Sound(
+      id: 'animals_seagulls',
+      name: '海鸥',
+      url: 'assets/sounds/animals/seagulls.ogg',
+      category: '动物',
+      icon: Icons.pets,
+    ),
+    Sound(
+      id: 'animals_crickets',
+      name: '蟋蟀',
+      url: 'assets/sounds/animals/crickets.ogg',
+      category: '动物',
+      icon: Icons.pets,
+    ),
+    Sound(
+      id: 'animals_wolf',
+      name: '狼嚎',
+      url: 'assets/sounds/animals/wolf.ogg',
+      category: '动物',
+      icon: Icons.pets,
+    ),
+    Sound(
+      id: 'animals_owl',
+      name: '猫头鹰',
+      url: 'assets/sounds/animals/owl.ogg',
+      category: '动物',
+      icon: Icons.pets,
+    ),
+    Sound(
+      id: 'animals_frog',
+      name: '青蛙',
+      url: 'assets/sounds/animals/frog.ogg',
+      category: '动物',
+      icon: Icons.pets,
+    ),
+    Sound(
+      id: 'animals_dog_barking',
+      name: '狗叫',
+      url: 'assets/sounds/animals/dog-barking.ogg',
+      category: '动物',
+      icon: Icons.pets,
+    ),
+    Sound(
+      id: 'animals_horse_gallop',
+      name: '马奔腾',
+      url: 'assets/sounds/animals/horse-gallop.ogg',
+      category: '动物',
+      icon: Icons.pets,
+    ),
+    Sound(
+      id: 'animals_cat_purring',
+      name: '猫咪呼噜',
+      url: 'assets/sounds/animals/cat-purring.ogg',
+      category: '动物',
+      icon: Icons.pets,
+    ),
+    Sound(
+      id: 'animals_crows',
+      name: '乌鸦',
+      url: 'assets/sounds/animals/crows.ogg',
+      category: '动物',
+      icon: Icons.pets,
+    ),
+    Sound(
+      id: 'animals_whale',
+      name: '鲸鱼',
+      url: 'assets/sounds/animals/whale.ogg',
+      category: '动物',
+      icon: Icons.pets,
+    ),
+    Sound(
+      id: 'animals_beehive',
+      name: '蜂巢',
+      url: 'assets/sounds/animals/beehive.ogg',
+      category: '动物',
+      icon: Icons.pets,
+    ),
+    Sound(
+      id: 'animals_woodpecker',
+      name: '啄木鸟',
+      url: 'assets/sounds/animals/woodpecker.ogg',
+      category: '动物',
+      icon: Icons.pets,
+    ),
+    Sound(
+      id: 'animals_chickens',
+      name: '鸡',
+      url: 'assets/sounds/animals/chickens.ogg',
+      category: '动物',
+      icon: Icons.pets,
+    ),
+    Sound(
+      id: 'animals_cows',
+      name: '牛',
+      url: 'assets/sounds/animals/cows.ogg',
+      category: '动物',
+      icon: Icons.pets,
+    ),
+    Sound(
+      id: 'animals_sheep',
+      name: '羊',
+      url: 'assets/sounds/animals/sheep.ogg',
+      category: '动物',
+      icon: Icons.pets,
     ),
     Sound(
       id: 'noise_eating_chips',
@@ -946,10 +1188,27 @@ class Sound {
     return sortedCategories;
   }
 
+  /// 获取Android版本繁星页的声音列表
+  static List<Sound> getAndroidStarSounds() {
+    return _androidStarSounds;
+  }
+
+  /// 获取按分类分组的Android繁星页声音
+  static Map<String, List<Sound>> getAndroidStarSoundsByCategory() {
+    final Map<String, List<Sound>> grouped = {};
+    for (final sound in _androidStarSounds) {
+      if (!grouped.containsKey(sound.category)) {
+        grouped[sound.category] = [];
+      }
+      grouped[sound.category]!.add(sound);
+    }
+    return grouped;
+  }
+
   /// 根据分类筛选
   static List<Sound> getByCategory(String category) {
-    if (category == '全部') return allSounds;
-    return allSounds.where((s) => s.category == category).toList();
+    if (category == '全部') return _fallbackSounds;
+    return _fallbackSounds.where((s) => s.category == category).toList();
   }
 
   /// 从 JSON 创建

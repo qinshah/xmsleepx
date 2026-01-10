@@ -48,6 +48,18 @@ class _HomePageState extends State<HomePage> {
     return Sound.getByCategory(category);
   }
 
+  /// 获取按分类分组的声音（用于「全部」tab页）
+  Map<String, List<Sound>> get _groupedSounds {
+    final Map<String, List<Sound>> grouped = {};
+    for (final sound in Sound.getByCategory('全部')) {
+      if (!grouped.containsKey(sound.category)) {
+        grouped[sound.category] = [];
+      }
+      grouped[sound.category]!.add(sound);
+    }
+    return grouped;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +76,9 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 16),
               _isLoading
                   ? const Center(child: CircularProgressIndicator())
-                  : _buildSoundsGrid(),
+                  : _selectedCategory == 0
+                      ? _buildGroupedSoundsGrid()
+                      : _buildSoundsGrid(),
             ],
           ),
         ),
@@ -191,6 +205,61 @@ class _HomePageState extends State<HomePage> {
         itemBuilder: (context, index) {
           final sound = _filteredSounds[index];
           return SoundCard(sound: sound);
+        },
+      ),
+    );
+  }
+
+  Widget _buildGroupedSoundsGrid() {
+    final groupedSounds = _groupedSounds;
+    final categoryOrder = ['自然', '雨声', '城市', '场所', '交通', '物品', '白噪音', '动物', '音乐'];
+    
+    return Expanded(
+      child: ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+        itemCount: categoryOrder.length,
+        itemBuilder: (context, index) {
+          final category = categoryOrder[index];
+          final sounds = groupedSounds[category];
+          
+          if (sounds == null || sounds.isEmpty) {
+            return const SizedBox.shrink();
+          }
+          
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 分类标题
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Text(
+                  category,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+              ),
+              // 该分类下的声音网格
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                padding: EdgeInsets.zero,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 1.0,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                ),
+                itemCount: sounds.length,
+                itemBuilder: (context, soundIndex) {
+                  final sound = sounds[soundIndex];
+                  return SoundCard(sound: sound);
+                },
+              ),
+              const SizedBox(height: 16),
+            ],
+          );
         },
       ),
     );
