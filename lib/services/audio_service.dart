@@ -251,10 +251,14 @@ class AudioService {
 
   /// 释放资源
   void dispose() {
-    for (final info in _players.values) {
-      info.player.dispose();
-    }
-    _players.clear();
+    // 停止所有播放器并清理资源
+    stopAll();
+    
+    // 释放音频会话
+    _audioSession = null;
+    
+    // 关闭流控制器
     _onChangeController.close();
+    _isInitialized = false;
   }
 }

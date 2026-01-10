@@ -19,7 +19,14 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    _cleanupAudioOnRestart();
     _loadSounds();
+  }
+
+  /// 应用重启时清理音频状态
+  void _cleanupAudioOnRestart() {
+    // 停止所有播放中的音频，防止热重启后状态不一致
+    _audioService.stopAll();
   }
 
   Future<void> _loadSounds() async {
@@ -87,18 +94,24 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               const Spacer(),
+              // GitHub 按钮（与Android版本一致）
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                width: 32,
+                height: 32,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(20),
+                  color: Theme.of(context).colorScheme.surfaceVariant,
+                  shape: BoxShape.circle,
                 ),
-                child: Text(
-                  '助眠音效',
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    fontWeight: FontWeight.w500,
+                child: IconButton(
+                  onPressed: () {
+                    // TODO: 打开GitHub链接
+                  },
+                  icon: Icon(
+                    Icons.code,
+                    size: 16,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
+                  padding: EdgeInsets.zero,
                 ),
               ),
             ],

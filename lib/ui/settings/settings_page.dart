@@ -3,9 +3,11 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../config/theme.dart';
 import '../../services/audio_service.dart';
+import 'theme_settings_page.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  final VoidCallback? onThemeChanged;
+  const SettingsPage({super.key, this.onThemeChanged});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -28,8 +30,10 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> _loadSettings() async {
     final packageInfo = await PackageInfo.fromPlatform();
+    final themeMode = await AppTheme.getThemeMode();
     setState(() {
       _version = packageInfo.version;
+      _themeMode = themeMode;
       // 从 AudioService 获取当前全局音量
       _globalVolume = _audioService.globalVolume;
     });
@@ -91,7 +95,7 @@ class _SettingsPageState extends State<SettingsPage> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-              _buildSectionHeader('外观'),
+          _buildSectionHeader('外观'),
           _buildThemeTile(context),
           _buildSwitchTile(
             icon: Icons.animation,
@@ -104,7 +108,7 @@ class _SettingsPageState extends State<SettingsPage> {
               });
             },
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 24),
           
           _buildSectionHeader('系统'),
           _buildListTile(
@@ -113,9 +117,6 @@ class _SettingsPageState extends State<SettingsPage> {
             subtitle: '简体中文',
             onTap: () => _showLanguageSelectionDialog(context),
           ),
-          const SizedBox(height: 16),
-          
-          _buildSectionHeader('其他'),
           _buildVolumeTile(context),
           _buildListTile(
             icon: Icons.cleaning_services,
@@ -125,8 +126,9 @@ class _SettingsPageState extends State<SettingsPage> {
                 : _formatBytes(_cacheSize),
             onTap: () => _showCacheClearDialog(context),
           ),
+          const SizedBox(height: 24),
               
-              _buildSectionHeader('关于'),
+          _buildSectionHeader('其他'),
               _buildListTile(
                 icon: Icons.info,
                 title: '版本',
@@ -199,7 +201,16 @@ class _SettingsPageState extends State<SettingsPage> {
           Icons.chevron_right,
           color: Theme.of(context).colorScheme.onSurfaceVariant,
         ),
-        onTap: () => _showThemeDialog(context),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ThemeSettingsPage(
+                onThemeChanged: widget.onThemeChanged,
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -330,62 +341,6 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         onTap: () => _showVolumeAdjustDialog(context),
       ),
-    );
-  }
-
-  void _showThemeDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('选择主题'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildThemeOption(
-                icon: Icons.brightness_auto,
-                title: '跟随系统',
-                mode: ThemeMode.system,
-              ),
-              _buildThemeOption(
-                icon: Icons.light_mode,
-                title: '浅色模式',
-                mode: ThemeMode.light,
-              ),
-              _buildThemeOption(
-                icon: Icons.dark_mode,
-                title: '深色模式',
-                mode: ThemeMode.dark,
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildThemeOption({
-    required IconData icon,
-    required String title,
-    required ThemeMode mode,
-  }) {
-    final isSelected = _themeMode == mode;
-    return ListTile(
-      leading: Icon(icon),
-      title: Text(title),
-      trailing: isSelected 
-          ? Icon(
-              Icons.check,
-              color: Theme.of(context).colorScheme.primary,
-            )
-          : null,
-      onTap: () {
-        setState(() {
-          _themeMode = mode;
-        });
-        AppTheme.setThemeMode(mode);
-        Navigator.pop(context);
-      },
     );
   }
 
