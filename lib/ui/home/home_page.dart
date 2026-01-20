@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../../models/sound.dart';
-import '../../services/audio_service.dart';
-import '../player/player_page.dart';
+import 'package:provider/provider.dart';
+import 'package:xmsleepx/app/data_model/playing_sound.dart';
+import 'package:xmsleepx/app/state_mgmt/sound_manager.dart';
+import '../../app/data_model/sound_asset.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,25 +13,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final AudioService _audioService = AudioService();
   int _selectedCategory = 0; // 0 = 全部
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _cleanupAudioOnRestart();
     _loadSounds();
   }
 
-  /// 应用重启时清理音频状态
-  void _cleanupAudioOnRestart() {
-    // 停止所有播放中的音频，防止热重启后状态不一致
-    _audioService.stopAll();
-  }
-
   Future<void> _loadSounds() async {
-    await Sound.scanAssets();
+    await SoundAsset.scanAssets();
     if (mounted) {
       setState(() {
         _isLoading = false;
@@ -38,20 +31,20 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  List<String> get _categories => Sound.getCategories();
+  List<String> get _categories => SoundAsset.getCategories();
 
-  List<Sound> get _filteredSounds {
+  List<SoundAsset> get _filteredSounds {
     if (_isLoading) return [];
     final category = _selectedCategory == 0
         ? '全部'
         : _categories[_selectedCategory];
-    return Sound.getByCategory(category);
+    return SoundAsset.getByCategory(category);
   }
 
   /// 获取按分类分组的声音（用于「全部」tab页）
-  Map<String, List<Sound>> get _groupedSounds {
-    final Map<String, List<Sound>> grouped = {};
-    for (final sound in Sound.getByCategory('全部')) {
+  Map<String, List<SoundAsset>> get _groupedSounds {
+    final Map<String, List<SoundAsset>> grouped = {};
+    for (final sound in SoundAsset.getByCategory('全部')) {
       if (!grouped.containsKey(sound.category)) {
         grouped[sound.category] = [];
       }
@@ -77,8 +70,8 @@ class _HomePageState extends State<HomePage> {
               _isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : _selectedCategory == 0
-                      ? _buildGroupedSoundsGrid()
-                      : _buildSoundsGrid(),
+                  ? _buildGroupedSoundsGrid()
+                  : _buildSoundsGrid(),
             ],
           ),
         ),
@@ -100,9 +93,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               Text(
                 'XMSleepX',
-                style: Theme.of(
-                  context,
-                ).textTheme.headlineLarge?.copyWith(
+                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).colorScheme.primary,
                 ),
@@ -171,8 +162,8 @@ class _HomePageState extends State<HomePage> {
             checkmarkColor: Theme.of(context).colorScheme.onPrimary,
             backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
             side: BorderSide(
-              color: isSelected 
-                  ? Theme.of(context).colorScheme.primary 
+              color: isSelected
+                  ? Theme.of(context).colorScheme.primary
                   : Theme.of(context).colorScheme.outline.withOpacity(0.3),
               width: 1,
             ),
@@ -204,7 +195,7 @@ class _HomePageState extends State<HomePage> {
         itemCount: _filteredSounds.length,
         itemBuilder: (context, index) {
           final sound = _filteredSounds[index];
-          return SoundCard(sound: sound);
+          return SoundCard(soundAsset: sound);
         },
       ),
     );
@@ -212,8 +203,18 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildGroupedSoundsGrid() {
     final groupedSounds = _groupedSounds;
-    final categoryOrder = ['自然', '雨声', '城市', '场所', '交通', '物品', '白噪音', '动物', '音乐'];
-    
+    final categoryOrder = [
+      '自然',
+      '雨声',
+      '城市',
+      '场所',
+      '交通',
+      '物品',
+      '白噪音',
+      '动物',
+      '音乐',
+    ];
+
     return Expanded(
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -221,11 +222,11 @@ class _HomePageState extends State<HomePage> {
         itemBuilder: (context, index) {
           final category = categoryOrder[index];
           final sounds = groupedSounds[category];
-          
+
           if (sounds == null || sounds.isEmpty) {
             return const SizedBox.shrink();
           }
-          
+
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -254,7 +255,7 @@ class _HomePageState extends State<HomePage> {
                 itemCount: sounds.length,
                 itemBuilder: (context, soundIndex) {
                   final sound = sounds[soundIndex];
-                  return SoundCard(sound: sound);
+                  return SoundCard(soundAsset: sound);
                 },
               ),
               const SizedBox(height: 16),
@@ -272,68 +273,29 @@ class _HomePageState extends State<HomePage> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
-      builder: (context) {
-        return PlayingListSheet(audioService: _audioService);
-      },
+      builder: (context) => PlayingListSheet(),
     );
   }
 }
 
-class SoundCard extends StatefulWidget {
-  final Sound sound;
+class SoundCard extends StatelessWidget {
+  final SoundAsset soundAsset;
 
-  const SoundCard({super.key, required this.sound});
-
-  @override
-  State<SoundCard> createState() => _SoundCardState();
-}
-
-class _SoundCardState extends State<SoundCard> {
-  final AudioService _audioService = AudioService();
-  late StreamSubscription _audioSubscription;
-  bool _isPlaying = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _isPlaying = _audioService.isPlaying(widget.sound.id);
-    
-    // 监听音频状态变化
-    _audioSubscription = _audioService.onChange.listen((_) {
-      if (mounted) {
-        setState(() {
-          _isPlaying = _audioService.isPlaying(widget.sound.id);
-        });
-      }
-    });
-  }
-  
-  // 当widget的依赖项变化时重新检查播放状态
-  @override
-  void didUpdateWidget(SoundCard oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.sound.id != widget.sound.id) {
-      setState(() {
-        _isPlaying = _audioService.isPlaying(widget.sound.id);
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    _audioSubscription.cancel();
-    super.dispose();
-  }
+  const SoundCard({super.key, required this.soundAsset});
 
   @override
   Widget build(BuildContext context) {
+    final playing = context.select<SoundManager, bool>(
+      (soundManager) => soundManager.isSoundPlaying(soundAsset),
+    );
+    final soundManager = context.read<SoundManager>();
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: _isPlaying 
+          colors: playing
               ? [
                   Theme.of(context).colorScheme.primary.withOpacity(0.1),
                   Theme.of(context).colorScheme.primary.withOpacity(0.05),
@@ -344,39 +306,25 @@ class _SoundCardState extends State<SoundCard> {
                 ],
         ),
         border: Border.all(
-          color: _isPlaying 
+          color: playing
               ? Theme.of(context).colorScheme.primary.withOpacity(0.3)
               : Theme.of(context).colorScheme.outline.withOpacity(0.2),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: _isPlaying 
+            color: playing
                 ? Theme.of(context).colorScheme.primary.withOpacity(0.2)
                 : Colors.black.withOpacity(0.05),
-            blurRadius: _isPlaying ? 8 : 4,
-            offset: Offset(0, _isPlaying ? 4 : 2),
+            blurRadius: playing ? 8 : 4,
+            offset: Offset(0, playing ? 4 : 2),
           ),
         ],
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () {
-            // 如果未播放则播放，已播放则停止并从列表移除
-            if (_audioService.hasSound(widget.sound.id)) {
-              _audioService.stop(widget.sound.id);
-            } else {
-              _audioService.play(widget.sound);
-            }
-          },
-          onLongPress: () {
-            // 长按跳转到播放页面
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => PlayerPage(sound: widget.sound)),
-            );
-          },
+          onTap: () => SoundManager.i.onTapSound(soundAsset),
           borderRadius: BorderRadius.circular(16),
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -395,26 +343,31 @@ class _SoundCardState extends State<SoundCard> {
                           gradient: LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
-                            colors: _isPlaying
+                            colors: playing
                                 ? [
                                     Theme.of(context).colorScheme.primary,
-                                    Theme.of(context).colorScheme.primary.withOpacity(0.7),
+                                    Theme.of(
+                                      context,
+                                    ).colorScheme.primary.withOpacity(0.7),
                                   ]
                                 : [
-                                    Theme.of(context).colorScheme.surfaceVariant,
-                                    Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.8),
+                                    Theme.of(
+                                      context,
+                                    ).colorScheme.surfaceVariant,
+                                    Theme.of(context).colorScheme.surfaceVariant
+                                        .withOpacity(0.8),
                                   ],
                           ),
                         ),
                         child: Icon(
-                          widget.sound.icon,
+                          soundAsset.icon,
                           size: 30,
-                          color: _isPlaying
+                          color: playing
                               ? Theme.of(context).colorScheme.onPrimary
                               : Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                       ),
-                      if (_isPlaying)
+                      if (playing)
                         Positioned(
                           top: 0,
                           right: 0,
@@ -424,10 +377,7 @@ class _SoundCardState extends State<SoundCard> {
                             decoration: BoxDecoration(
                               color: Colors.green,
                               shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.white,
-                                width: 2,
-                              ),
+                              border: Border.all(color: Colors.white, width: 2),
                             ),
                           ),
                         ),
@@ -436,19 +386,14 @@ class _SoundCardState extends State<SoundCard> {
                         bottom: -4,
                         right: -4,
                         child: GestureDetector(
-                          onTap: () {
-                            _audioService.stop(widget.sound.id);
-                          },
+                          onTap: () => soundManager.onTapSound(soundAsset),
                           child: Container(
                             width: 28,
                             height: 28,
                             decoration: BoxDecoration(
                               color: Theme.of(context).colorScheme.primary,
                               shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.white,
-                                width: 2,
-                              ),
+                              border: Border.all(color: Colors.white, width: 2),
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.black.withOpacity(0.2),
@@ -470,10 +415,10 @@ class _SoundCardState extends State<SoundCard> {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  widget.sound.name,
+                  soundAsset.name,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: _isPlaying ? FontWeight.w600 : FontWeight.w500,
-                    color: _isPlaying 
+                    fontWeight: playing ? FontWeight.w600 : FontWeight.w500,
+                    color: playing
                         ? Theme.of(context).colorScheme.primary
                         : Theme.of(context).colorScheme.onSurface,
                   ),
@@ -483,7 +428,7 @@ class _SoundCardState extends State<SoundCard> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  widget.sound.category,
+                  soundAsset.category,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                     fontWeight: FontWeight.w400,
@@ -500,39 +445,16 @@ class _SoundCardState extends State<SoundCard> {
 }
 
 class PlayingListSheet extends StatefulWidget {
-  final AudioService audioService;
-
-  const PlayingListSheet({super.key, required this.audioService});
+  const PlayingListSheet({super.key});
 
   @override
   State<PlayingListSheet> createState() => _PlayingListSheetState();
 }
 
 class _PlayingListSheetState extends State<PlayingListSheet> {
-  late StreamSubscription _audioSubscription;
-
-  @override
-  void initState() {
-    super.initState();
-    
-    // 监听音频状态变化
-    _audioSubscription = widget.audioService.onChange.listen((_) {
-      if (mounted) {
-        setState(() {});
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _audioSubscription.cancel();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    final playingList = widget.audioService.playingList;
-
+    final playingSounds = context.watch<SoundManager>().playingSounds;
     return SizedBox(
       height: 320,
       child: Column(
@@ -554,7 +476,7 @@ class _PlayingListSheetState extends State<PlayingListSheet> {
                   children: [
                     Text('正在播放', style: Theme.of(context).textTheme.titleLarge),
                     Text(
-                      '${playingList.length} 个声音',
+                      '${playingSounds.length} 个声音',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
@@ -562,9 +484,9 @@ class _PlayingListSheetState extends State<PlayingListSheet> {
                   ],
                 ),
                 TextButton(
-                  onPressed: () async {
-                    await widget.audioService.stopAll();
-                    if (context.mounted) Navigator.pop(context);
+                  onPressed: () {
+                    SoundManager.i.stopAllSound();
+                    Navigator.pop(context);
                   },
                   child: const Text('全部停止'),
                 ),
@@ -572,19 +494,25 @@ class _PlayingListSheetState extends State<PlayingListSheet> {
             ),
           ),
           Expanded(
-            child: playingList.isEmpty
+            child: playingSounds.isEmpty
                 ? Center(child: Text('暂无正在播放的音频'))
                 : ListView.builder(
-                    itemCount: playingList.length,
+                    itemCount: playingSounds.length,
                     itemBuilder: (context, idx) {
-                      final info = playingList[idx];
+                      final playingSound = playingSounds[idx];
+                      final soundAsset = playingSound.asset;
                       return Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: Theme.of(context).colorScheme.surface,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.outline.withOpacity(0.2),
                           ),
                         ),
                         child: Column(
@@ -592,17 +520,13 @@ class _PlayingListSheetState extends State<PlayingListSheet> {
                             ListTile(
                               leading: Icon(
                                 Icons.audiotrack,
-                                color: info.isPlaying 
-                                    ? Theme.of(context).colorScheme.primary
-                                    : Theme.of(context).colorScheme.onSurfaceVariant,
+                                color: Theme.of(context).colorScheme.primary,
                               ),
                               title: Text(
-                                info.name,
+                                soundAsset.name,
                                 style: TextStyle(
-                                  fontWeight: info.isPlaying ? FontWeight.w600 : FontWeight.w500,
-                                  color: info.isPlaying 
-                                      ? Theme.of(context).colorScheme.primary
-                                      : Theme.of(context).colorScheme.onSurface,
+                                  fontWeight: FontWeight.w600,
+                                  color: Theme.of(context).colorScheme.primary,
                                 ),
                               ),
                               trailing: Row(
@@ -610,66 +534,89 @@ class _PlayingListSheetState extends State<PlayingListSheet> {
                                 children: [
                                   IconButton(
                                     icon: const Icon(Icons.stop),
-                                    onPressed: () => widget.audioService.stop(info.id),
+                                    onPressed: () =>
+                                        SoundManager.i.stopSound(playingSound),
                                   ),
                                 ],
                               ),
                             ),
                             // 音量调节滑块
-                            if (widget.audioService.hasSound(info.id))
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.volume_down,
-                                      size: 20,
-                                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      child: SliderTheme(
-                                        data: SliderTheme.of(context).copyWith(
-                                          trackHeight: 4,
-                                          thumbShape: const RoundSliderThumbShape(
-                                            enabledThumbRadius: 8,
-                                          ),
-                                          overlayShape: const RoundSliderOverlayShape(
-                                            overlayRadius: 12,
-                                          ),
-                                        ),
-                                        child: Slider(
-                                          value: info.volume,
-                                          min: 0,
-                                          max: 1,
-                                          divisions: 20,
-                                          onChanged: (value) {
-                                            widget.audioService.setVolume(info.id, value);
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Icon(
-                                      Icons.volume_up,
-                                      size: 20,
-                                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    SizedBox(
-                                      width: 32,
-                                      child: Text(
-                                        '${(info.volume * 100).round()}%',
-                                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
                               ),
+                              child: StatefulBuilder(
+                                builder: (context, setVolumeBarState) {
+                                  final volume = playingSound.player.volume;
+                                  return Row(
+                                    children: [
+                                      Icon(
+                                        Icons.volume_down,
+                                        size: 20,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onSurfaceVariant,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: SliderTheme(
+                                          data: SliderTheme.of(context).copyWith(
+                                            trackHeight: 4,
+                                            thumbShape:
+                                                const RoundSliderThumbShape(
+                                                  enabledThumbRadius: 8,
+                                                ),
+                                            overlayShape:
+                                                const RoundSliderOverlayShape(
+                                                  overlayRadius: 12,
+                                                ),
+                                          ),
+                                          child: Slider(
+                                            value: volume,
+                                            min: 0.0,
+                                            max: 1.0,
+                                            divisions: 20,
+                                            onChanged: (value) {
+                                              setVolumeBarState(() {
+                                                playingSound.player.setVolume(
+                                                  value,
+                                                );
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Icon(
+                                        Icons.volume_up,
+                                        size: 20,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onSurfaceVariant,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      SizedBox(
+                                        width: 32,
+                                        child: Text(
+                                          '${(volume * 100).round()}%',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall
+                                              ?.copyWith(
+                                                color: Theme.of(
+                                                  context,
+                                                ).colorScheme.onSurfaceVariant,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                            ),
                           ],
                         ),
                       );

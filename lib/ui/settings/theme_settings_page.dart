@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../config/theme.dart';
+import '../../app/theme.dart';
 
 class ThemeSettingsPage extends StatefulWidget {
   final VoidCallback? onThemeChanged;

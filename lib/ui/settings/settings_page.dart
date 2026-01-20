@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../config/theme.dart';
-import '../../services/audio_service.dart';
+import 'package:xmsleepx/app/state_mgmt/sound_manager.dart';
+import '../../app/theme.dart';
 import 'theme_settings_page.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -20,7 +20,6 @@ class _SettingsPageState extends State<SettingsPage> {
   double _globalVolume = 0.5; // 默认音量50%
   bool _isClearingCache = false;
   int _cacheSize = 0;
-  final AudioService _audioService = AudioService();
 
   @override
   void initState() {
@@ -34,8 +33,6 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       _version = packageInfo.version;
       _themeMode = themeMode;
-      // 从 AudioService 获取当前全局音量
-      _globalVolume = _audioService.globalVolume;
     });
     _calculateCacheSize();
   }
@@ -44,10 +41,10 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       _isClearingCache = true;
     });
-    
+
     // 模拟缓存大小计算
     await Future.delayed(const Duration(seconds: 1));
-    
+
     setState(() {
       _cacheSize = 1024 * 1024; // 1MB
       _isClearingCache = false;
@@ -58,18 +55,18 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       _isClearingCache = true;
     });
-    
+
     await Future.delayed(const Duration(seconds: 2));
-    
+
     setState(() {
       _cacheSize = 0;
       _isClearingCache = false;
     });
-    
+
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('缓存已清除')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('缓存已清除')));
     }
   }
 
@@ -109,7 +106,7 @@ class _SettingsPageState extends State<SettingsPage> {
             },
           ),
           const SizedBox(height: 24),
-          
+
           _buildSectionHeader('系统'),
           _buildListTile(
             icon: Icons.language,
@@ -121,36 +118,34 @@ class _SettingsPageState extends State<SettingsPage> {
           _buildListTile(
             icon: Icons.cleaning_services,
             title: '清除缓存',
-            subtitle: _isClearingCache 
-                ? '正在清除...'
-                : _formatBytes(_cacheSize),
+            subtitle: _isClearingCache ? '正在清除...' : _formatBytes(_cacheSize),
             onTap: () => _showCacheClearDialog(context),
           ),
           const SizedBox(height: 24),
-              
+
           _buildSectionHeader('其他'),
-              _buildListTile(
-                icon: Icons.info,
-                title: '版本',
-                subtitle: _version,
-                onTap: () {},
-              ),
-              _buildListTile(
-                icon: Icons.privacy_tip,
-                title: '隐私政策',
-                onTap: () => _launchUrl('https://example.com/privacy'),
-              ),
-              _buildListTile(
-                icon: Icons.description,
-                title: '使用条款',
-                onTap: () => _launchUrl('https://example.com/terms'),
-              ),
-              _buildListTile(
-                icon: Icons.feedback,
-                title: '意见反馈',
-                onTap: () => _launchUrl('https://example.com/feedback'),
-              ),
-            ],
+          _buildListTile(
+            icon: Icons.info,
+            title: '版本',
+            subtitle: _version,
+            onTap: () {},
+          ),
+          _buildListTile(
+            icon: Icons.privacy_tip,
+            title: '隐私政策',
+            onTap: () => _launchUrl('https://example.com/privacy'),
+          ),
+          _buildListTile(
+            icon: Icons.description,
+            title: '使用条款',
+            onTap: () => _launchUrl('https://example.com/terms'),
+          ),
+          _buildListTile(
+            icon: Icons.feedback,
+            title: '意见反馈',
+            onTap: () => _launchUrl('https://example.com/feedback'),
+          ),
+        ],
       ),
     );
   }
@@ -205,9 +200,8 @@ class _SettingsPageState extends State<SettingsPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ThemeSettingsPage(
-                onThemeChanged: widget.onThemeChanged,
-              ),
+              builder: (context) =>
+                  ThemeSettingsPage(onThemeChanged: widget.onThemeChanged),
             ),
           );
         },
@@ -285,7 +279,7 @@ class _SettingsPageState extends State<SettingsPage> {
             fontWeight: FontWeight.w500,
           ),
         ),
-        subtitle: subtitle != null 
+        subtitle: subtitle != null
             ? Text(
                 subtitle,
                 style: TextStyle(
@@ -293,7 +287,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               )
             : null,
-        trailing: onTap != null 
+        trailing: onTap != null
             ? Icon(
                 Icons.chevron_right,
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -389,33 +383,33 @@ class _SettingsPageState extends State<SettingsPage> {
     showDialog(
       context: context,
       builder: (context) {
-        double localVolume = _globalVolume;
+        double inDialogVolume = _globalVolume;
         return AlertDialog(
           title: const Text('调整所有音量'),
           content: StatefulBuilder(
-            builder: (context, setState) {
+            builder: (context, setDialogState) {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Text('应用到所有正在播放的声音'),
                   const SizedBox(height: 16),
                   Slider(
-                    value: localVolume,
+                    value: inDialogVolume,
                     min: 0,
                     max: 1,
                     divisions: 20,
                     onChanged: (value) {
-                      setState(() => localVolume = value);
+                      setDialogState(() => inDialogVolume = value);
                       // 实时更新全局音量
-                      _audioService.setGlobalVolume(value);
-                      this.setState(() => _globalVolume = value);
+                      SoundManager.i.setAllVolume(value);
+                      setState(() => _globalVolume = value);
                     },
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text('0%'),
-                      Text('${(localVolume * 100).round()}%'),
+                      Text('${(inDialogVolume * 100).round()}%'),
                       const Text('100%'),
                     ],
                   ),
@@ -423,12 +417,6 @@ class _SettingsPageState extends State<SettingsPage> {
               );
             },
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('确定'),
-            ),
-          ],
         );
       },
     );

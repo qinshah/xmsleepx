@@ -3,18 +3,18 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
-class Sound {
+class SoundAsset {
   final String id;
   final String name;
-  final String url;
+  final String path;
   final String category;
   final IconData icon;
   final String? description;
 
-  Sound({
+  SoundAsset({
     required this.id,
     required this.name,
-    required this.url,
+    required this.path,
     required this.category,
     required this.icon,
     this.description,
@@ -47,7 +47,7 @@ class Sound {
   };
 
   /// 所有音频文件列表
-  static List<Sound> allSounds = [];
+  static List<SoundAsset> allSounds = [];
 
   /// 已扫描的路径缓存
   static final Set<String> _scannedPaths = {};
@@ -59,13 +59,15 @@ class Sound {
   }
 
   /// 在 isolate 中扫描 assets 目录
-  static Future<List<Sound>> _scanAssetsDirectoryIsolate(String path) async {
+  static Future<List<SoundAsset>> _scanAssetsDirectoryIsolate(
+    String path,
+  ) async {
     return await _scanAssetsDirectory(path);
   }
 
   /// 扫描 assets 目录下的所有音频文件，并对 AssetManifest 做更健壮的解析
-  static Future<List<Sound>> _scanAssetsDirectory(String path) async {
-    final sounds = <Sound>[];
+  static Future<List<SoundAsset>> _scanAssetsDirectory(String path) async {
+    final sounds = <SoundAsset>[];
 
     // 防止重复扫描
     if (_scannedPaths.contains(path)) {
@@ -136,977 +138,978 @@ class Sound {
   }
 
   /// Android版本繁星页的16个声音（按顺序排列）
-  static final List<Sound> _androidStarSounds = [
+  static final List<SoundAsset> _androidStarSounds = [
     // 1. 伞上雨声
-    Sound(
+    SoundAsset(
       id: 'rain_umbrella_rain',
       name: '伞上雨声',
-      url: 'assets/sounds/rain/rain-on-umbrella.ogg',
+      path: 'assets/sounds/rain/rain-on-umbrella.ogg',
       category: '雨声',
       icon: Icons.water_drop,
     ),
     // 2. 划船
-    Sound(
+    SoundAsset(
       id: 'transport_rowing_boat',
       name: '划船',
-      url: 'assets/sounds/transport/rowing-boat.mp3',
+      path: 'assets/sounds/transport/rowing-boat.mp3',
       category: '交通',
       icon: Icons.sailing,
     ),
     // 3. 办公室
-    Sound(
+    SoundAsset(
       id: 'places_office',
       name: '办公室',
-      url: 'assets/sounds/places/office.mp3',
+      path: 'assets/sounds/places/office.mp3',
       category: '场所',
       icon: Icons.computer,
     ),
     // 4. 图书馆
-    Sound(
+    SoundAsset(
       id: 'places_library',
       name: '图书馆',
-      url: 'assets/sounds/places/library.mp3',
+      path: 'assets/sounds/places/library.mp3',
       category: '场所',
       icon: Icons.library_books,
     ),
     // 5. 大雨
-    Sound(
+    SoundAsset(
       id: 'rain_heavy_rain',
       name: '大雨',
-      url: 'assets/sounds/rain/heavy_rain.ogg',
+      path: 'assets/sounds/rain/heavy_rain.ogg',
       category: '雨声',
       icon: Icons.water_drop,
     ),
     // 6. 打字机
-    Sound(
+    SoundAsset(
       id: 'things_typewriter',
       name: '打字机',
-      url: 'assets/sounds/things/typewriter.mp3',
+      path: 'assets/sounds/things/typewriter.mp3',
       category: '物品',
       icon: Icons.keyboard,
     ),
     // 7. 打雷
-    Sound(
+    SoundAsset(
       id: 'rain_thunderstorm',
       name: '打雷',
-      url: 'assets/sounds/rain/thunderstorm.ogg',
+      path: 'assets/sounds/rain/thunderstorm.ogg',
       category: '雨声',
       icon: Icons.thunderstorm,
     ),
     // 8. 时钟
-    Sound(
+    SoundAsset(
       id: 'things_clock',
       name: '时钟',
-      url: 'assets/sounds/things/clock.mp3',
+      path: 'assets/sounds/things/clock.mp3',
       category: '物品',
       icon: Icons.access_time,
     ),
     // 9. 森林鸟鸣
-    Sound(
+    SoundAsset(
       id: 'animals_birds',
       name: '森林鸟鸣',
-      url: 'assets/sounds/animals/birds.ogg',
+      path: 'assets/sounds/animals/birds.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
     // 10. 漂流
-    Sound(
+    SoundAsset(
       id: 'transport_sailboat',
       name: '漂流',
-      url: 'assets/sounds/transport/sailboat.mp3',
+      path: 'assets/sounds/transport/sailboat.mp3',
       category: '交通',
       icon: Icons.sailing,
     ),
     // 11. 篝火
-    Sound(
+    SoundAsset(
       id: 'nature_campfire',
       name: '篝火',
-      url: 'assets/sounds/nature/campfire.ogg',
+      path: 'assets/sounds/nature/campfire.ogg',
       category: '自然',
       icon: Icons.local_fire_department,
     ),
     // 12. 起风了
-    Sound(
+    SoundAsset(
       id: 'nature_wind',
       name: '起风了',
-      url: 'assets/sounds/nature/wind.ogg',
+      path: 'assets/sounds/nature/wind.ogg',
       category: '自然',
       icon: Icons.air,
     ),
     // 13. 键盘
-    Sound(
+    SoundAsset(
       id: 'things_keyboard',
       name: '键盘',
-      url: 'assets/sounds/things/keyboard.mp3',
+      path: 'assets/sounds/things/keyboard.mp3',
       category: '物品',
       icon: Icons.keyboard,
     ),
     // 14. 雪地徒步
-    Sound(
+    SoundAsset(
       id: 'nature_walk_in_snow',
       name: '雪地徒步',
-      url: 'assets/sounds/nature/walk-in-snow.ogg',
+      path: 'assets/sounds/nature/walk-in-snow.ogg',
       category: '自然',
       icon: Icons.ac_unit,
     ),
     // 15. 早晨咖啡
-    Sound(
+    SoundAsset(
       id: 'places_cafe',
       name: '早晨咖啡',
-      url: 'assets/sounds/places/cafe.mp3',
+      path: 'assets/sounds/places/cafe.mp3',
       category: '场所',
       icon: Icons.local_cafe,
     ),
     // 16. 吊扇
-    Sound(
+    SoundAsset(
       id: 'things_ceiling_fan',
       name: '吊扇',
-      url: 'assets/sounds/things/ceiling-fan.mp3',
+      path: 'assets/sounds/things/ceiling-fan.mp3',
       category: '物品',
       icon: Icons.air,
     ),
   ];
+
   /// 完整的音频列表（按Android版本order顺序排列）
-  static final List<Sound> _fallbackSounds = [
+  static final List<SoundAsset> _fallbackSounds = [
     // 自然声音 (按Android版本order顺序)
-    Sound(
+    SoundAsset(
       id: 'nature_river',
       name: '河流',
-      url: 'assets/sounds/nature/river.ogg',
+      path: 'assets/sounds/nature/river.ogg',
       category: '自然',
       icon: Icons.water,
     ),
-    Sound(
+    SoundAsset(
       id: 'nature_waves',
       name: '海浪',
-      url: 'assets/sounds/nature/waves.ogg',
+      path: 'assets/sounds/nature/waves.ogg',
       category: '自然',
       icon: Icons.waves,
     ),
-    Sound(
+    SoundAsset(
       id: 'nature_campfire',
       name: '篝火',
-      url: 'assets/sounds/nature/campfire.ogg',
+      path: 'assets/sounds/nature/campfire.ogg',
       category: '自然',
       icon: Icons.local_fire_department,
     ),
-    Sound(
+    SoundAsset(
       id: 'nature_wind',
       name: '风声',
-      url: 'assets/sounds/nature/wind.ogg',
+      path: 'assets/sounds/nature/wind.ogg',
       category: '自然',
       icon: Icons.air,
     ),
-    Sound(
+    SoundAsset(
       id: 'nature_howling_wind',
       name: '呼啸的风',
-      url: 'assets/sounds/nature/howling-wind.ogg',
+      path: 'assets/sounds/nature/howling-wind.ogg',
       category: '自然',
       icon: Icons.air,
     ),
-    Sound(
+    SoundAsset(
       id: 'nature_wind_in_trees',
       name: '树间风声',
-      url: 'assets/sounds/nature/wind-in-trees.ogg',
+      path: 'assets/sounds/nature/wind-in-trees.ogg',
       category: '自然',
       icon: Icons.terrain,
     ),
-    Sound(
+    SoundAsset(
       id: 'nature_waterfall',
       name: '瀑布',
-      url: 'assets/sounds/nature/waterfall.ogg',
+      path: 'assets/sounds/nature/waterfall.ogg',
       category: '自然',
       icon: Icons.water,
     ),
-    Sound(
+    SoundAsset(
       id: 'nature_walk_in_snow',
       name: '雪中行走',
-      url: 'assets/sounds/nature/walk-in-snow.ogg',
+      path: 'assets/sounds/nature/walk-in-snow.ogg',
       category: '自然',
       icon: Icons.ac_unit,
     ),
-    Sound(
+    SoundAsset(
       id: 'nature_walk_on_leaves',
       name: '踩踏树叶',
-      url: 'assets/sounds/nature/walk-on-leaves.ogg',
+      path: 'assets/sounds/nature/walk-on-leaves.ogg',
       category: '自然',
       icon: Icons.grass,
     ),
-    Sound(
+    SoundAsset(
       id: 'nature_walk_on_gravel',
       name: '踩踏碎石',
-      url: 'assets/sounds/nature/walk-on-gravel.ogg',
+      path: 'assets/sounds/nature/walk-on-gravel.ogg',
       category: '自然',
       icon: Icons.directions_walk,
     ),
-    Sound(
+    SoundAsset(
       id: 'nature_droplets',
       name: '水滴',
-      url: 'assets/sounds/nature/droplets.ogg',
+      path: 'assets/sounds/nature/droplets.ogg',
       category: '自然',
       icon: Icons.water_drop,
     ),
-    Sound(
+    SoundAsset(
       id: 'nature_jungle',
       name: '丛林',
-      url: 'assets/sounds/nature/jungle.ogg',
+      path: 'assets/sounds/nature/jungle.ogg',
       category: '自然',
       icon: Icons.park,
     ),
-    Sound(
+    SoundAsset(
       id: 'music_field',
       name: '田野',
-      url: 'assets/sounds/music/田野.mp3',
+      path: 'assets/sounds/music/田野.mp3',
       category: '音乐',
       icon: Icons.music_note,
     ),
     // 雨声 (按Android版本order顺序)
-    Sound(
+    SoundAsset(
       id: 'rain_light_rain',
       name: '小雨',
-      url: 'assets/sounds/rain/light-rain.ogg',
+      path: 'assets/sounds/rain/light-rain.ogg',
       category: '雨声',
       icon: Icons.water_drop,
     ),
-    Sound(
+    SoundAsset(
       id: 'rain_heavy_rain',
       name: '大雨',
-      url: 'assets/sounds/rain/heavy_rain.ogg',
+      path: 'assets/sounds/rain/heavy_rain.ogg',
       category: '雨声',
       icon: Icons.water_drop,
     ),
-    Sound(
+    SoundAsset(
       id: 'rain_rain_on_car_roof',
       name: '车顶雨声',
-      url: 'assets/sounds/rain/rain-on-car-roof.ogg',
+      path: 'assets/sounds/rain/rain-on-car-roof.ogg',
       category: '雨声',
       icon: Icons.water_drop,
     ),
-    Sound(
+    SoundAsset(
       id: 'rain_rain_on_umbrella',
       name: '伞上雨声',
-      url: 'assets/sounds/rain/rain-on-umbrella.ogg',
+      path: 'assets/sounds/rain/rain-on-umbrella.ogg',
       category: '雨声',
       icon: Icons.water_drop,
     ),
-    Sound(
+    SoundAsset(
       id: 'rain_rain_on_tent',
       name: '帐篷雨声',
-      url: 'assets/sounds/rain/rain-on-tent.ogg',
+      path: 'assets/sounds/rain/rain-on-tent.ogg',
       category: '雨声',
       icon: Icons.water_drop,
     ),
-    Sound(
+    SoundAsset(
       id: 'rain_rain_on_leaves',
       name: '叶上雨声',
-      url: 'assets/sounds/rain/rain-on-leaves.ogg',
+      path: 'assets/sounds/rain/rain-on-leaves.ogg',
       category: '雨声',
       icon: Icons.water_drop,
     ),
-    Sound(
+    SoundAsset(
       id: 'rain_rain_on_raincoat',
       name: '雨落雨披',
-      url: 'assets/sounds/rain/rain-on-raincoat.mp3',
+      path: 'assets/sounds/rain/rain-on-raincoat.mp3',
       category: '雨声',
       icon: Icons.water_drop,
     ),
-    Sound(
+    SoundAsset(
       id: 'rain_rain_on_windowsill',
       name: '雨打窗台',
-      url: 'assets/sounds/rain/rain-on-windowsill.mp3',
+      path: 'assets/sounds/rain/rain-on-windowsill.mp3',
       category: '雨声',
       icon: Icons.water_drop,
     ),
-    Sound(
+    SoundAsset(
       id: 'rain_rain_on_wooden_house',
       name: '雨敲木屋',
-      url: 'assets/sounds/rain/rain-on-wooden-house.mp3',
+      path: 'assets/sounds/rain/rain-on-wooden-house.mp3',
       category: '雨声',
       icon: Icons.water_drop,
     ),
-    Sound(
+    SoundAsset(
       id: 'rain_thunderstorm',
       name: '雷雨声',
-      url: 'assets/sounds/rain/thunderstorm.ogg',
+      path: 'assets/sounds/rain/thunderstorm.ogg',
       category: '雨声',
       icon: Icons.thunderstorm,
     ),
-    Sound(
+    SoundAsset(
       id: 'rain_rain_while_driving',
       name: '开车时遇雨',
-      url: 'assets/sounds/rain/rain-while-driving.mp3',
+      path: 'assets/sounds/rain/rain-while-driving.mp3',
       category: '雨声',
       icon: Icons.water_drop,
     ),
-    Sound(
+    SoundAsset(
       id: 'rain_rain_on_empty_street',
       name: '空荡街道的雨',
-      url: 'assets/sounds/rain/rain-on-empty-street.ogg',
+      path: 'assets/sounds/rain/rain-on-empty-street.ogg',
       category: '雨声',
       icon: Icons.water_drop,
     ),
-    Sound(
+    SoundAsset(
       id: 'rain_drizzle',
       name: '绵绵细雨',
-      url: 'assets/sounds/rain/drizzle.ogg',
+      path: 'assets/sounds/rain/drizzle.ogg',
       category: '雨声',
       icon: Icons.water_drop,
     ),
-    Sound(
+    SoundAsset(
       id: 'rain_rain_on_eaves',
       name: '屋檐落雨',
-      url: 'assets/sounds/rain/rain-on-eaves.mp3',
+      path: 'assets/sounds/rain/rain-on-eaves.mp3',
       category: '雨声',
       icon: Icons.water_drop,
     ),
-    Sound(
+    SoundAsset(
       id: 'rain_heavy_rain_on_glass',
       name: '大雨落玻璃',
-      url: 'assets/sounds/rain/heavy-rain-on-glass.ogg',
+      path: 'assets/sounds/rain/heavy-rain-on-glass.ogg',
       category: '雨声',
       icon: Icons.water_drop,
     ),
 
     // 动物声音 (按Android版本order顺序)
-    Sound(
+    SoundAsset(
       id: 'animals_birds',
       name: '鸟鸣',
-      url: 'assets/sounds/animals/birds.ogg',
+      path: 'assets/sounds/animals/birds.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_seagulls',
       name: '海鸥',
-      url: 'assets/sounds/animals/seagulls.ogg',
+      path: 'assets/sounds/animals/seagulls.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_crickets',
       name: '蟋蟀',
-      url: 'assets/sounds/animals/crickets.ogg',
+      path: 'assets/sounds/animals/crickets.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_wolf',
       name: '狼嚎',
-      url: 'assets/sounds/animals/wolf.ogg',
+      path: 'assets/sounds/animals/wolf.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_owl',
       name: '猫头鹰',
-      url: 'assets/sounds/animals/owl.ogg',
+      path: 'assets/sounds/animals/owl.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_frog',
       name: '青蛙',
-      url: 'assets/sounds/animals/frog.ogg',
+      path: 'assets/sounds/animals/frog.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_dog_barking',
       name: '狗叫',
-      url: 'assets/sounds/animals/dog-barking.ogg',
+      path: 'assets/sounds/animals/dog-barking.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_horse_gallop',
       name: '马奔腾',
-      url: 'assets/sounds/animals/horse-gallop.ogg',
+      path: 'assets/sounds/animals/horse-gallop.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_cat_purring',
       name: '猫咪呼噜',
-      url: 'assets/sounds/animals/cat-purring.ogg',
+      path: 'assets/sounds/animals/cat-purring.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_crows',
       name: '乌鸦',
-      url: 'assets/sounds/animals/crows.ogg',
+      path: 'assets/sounds/animals/crows.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_whale',
       name: '鲸鱼',
-      url: 'assets/sounds/animals/whale.ogg',
+      path: 'assets/sounds/animals/whale.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_beehive',
       name: '蜂巢',
-      url: 'assets/sounds/animals/beehive.ogg',
+      path: 'assets/sounds/animals/beehive.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_woodpecker',
       name: '啄木鸟',
-      url: 'assets/sounds/animals/woodpecker.ogg',
+      path: 'assets/sounds/animals/woodpecker.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_chickens',
       name: '鸡',
-      url: 'assets/sounds/animals/chickens.ogg',
+      path: 'assets/sounds/animals/chickens.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_cows',
       name: '牛',
-      url: 'assets/sounds/animals/cows.ogg',
+      path: 'assets/sounds/animals/cows.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_sheep',
       name: '羊',
-      url: 'assets/sounds/animals/sheep.ogg',
+      path: 'assets/sounds/animals/sheep.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'noise_eating_chips',
       name: 'Eating Chips',
-      url: 'assets/sounds/noise/eating-chips.ogg',
+      path: 'assets/sounds/noise/eating-chips.ogg',
       category: '白噪音',
       icon: Icons.restaurant,
     ),
-    Sound(
+    SoundAsset(
       id: 'noise_piano',
       name: 'Piano',
-      url: 'assets/sounds/noise/piano.ogg',
+      path: 'assets/sounds/noise/piano.ogg',
       category: '白噪音',
       icon: Icons.piano,
     ),
-    Sound(
+    SoundAsset(
       id: 'noise_pink_noise',
       name: 'Pink Noise',
-      url: 'assets/sounds/noise/pink-noise.ogg',
+      path: 'assets/sounds/noise/pink-noise.ogg',
       category: '白噪音',
       icon: Icons.graphic_eq,
     ),
-    Sound(
+    SoundAsset(
       id: 'noise_study',
       name: 'Study',
-      url: 'assets/sounds/noise/study.ogg',
+      path: 'assets/sounds/noise/study.ogg',
       category: '白噪音',
       icon: Icons.menu_book,
     ),
-    Sound(
+    SoundAsset(
       id: 'noise_white_noise',
       name: 'White Noise',
-      url: 'assets/sounds/noise/white-noise.ogg',
+      path: 'assets/sounds/noise/white-noise.ogg',
       category: '白噪音',
       icon: Icons.graphic_eq,
     ),
 
     // Music sounds
-    Sound(
+    SoundAsset(
       id: 'music_古筝',
       name: '古筝',
-      url: 'assets/sounds/music/古筝.wav',
+      path: 'assets/sounds/music/古筝.wav',
       category: '音乐',
       icon: Icons.music_note,
     ),
-    Sound(
+    SoundAsset(
       id: 'music_吉他',
       name: '吉他',
-      url: 'assets/sounds/music/吉他.wav',
+      path: 'assets/sounds/music/吉他.wav',
       category: '音乐',
       icon: Icons.music_note,
     ),
-    Sound(
+    SoundAsset(
       id: 'music_轻钢琴',
       name: '轻钢琴',
-      url: 'assets/sounds/music/轻钢琴.wav',
+      path: 'assets/sounds/music/轻钢琴.wav',
       category: '音乐',
       icon: Icons.music_note,
     ),
-    Sound(
+    SoundAsset(
       id: 'music_田野',
       name: '田野',
-      url: 'assets/sounds/music/田野.mp3',
+      path: 'assets/sounds/music/田野.mp3',
       category: '音乐',
       icon: Icons.music_note,
     ),
 
     // Urban sounds
-    Sound(
+    SoundAsset(
       id: 'urban_ambulance_siren',
       name: 'Ambulance Siren',
-      url: 'assets/sounds/urban/ambulance-siren.mp3',
+      path: 'assets/sounds/urban/ambulance-siren.mp3',
       category: '城市',
       icon: Icons.local_hospital,
     ),
-    Sound(
+    SoundAsset(
       id: 'urban_busy_street',
       name: 'Busy Street',
-      url: 'assets/sounds/urban/busy-street.mp3',
+      path: 'assets/sounds/urban/busy-street.mp3',
       category: '城市',
       icon: Icons.location_city,
     ),
-    Sound(
+    SoundAsset(
       id: 'urban_crowd',
       name: 'Crowd',
-      url: 'assets/sounds/urban/crowd.mp3',
+      path: 'assets/sounds/urban/crowd.mp3',
       category: '城市',
       icon: Icons.people,
     ),
-    Sound(
+    SoundAsset(
       id: 'urban_fireworks',
       name: 'Fireworks',
-      url: 'assets/sounds/urban/fireworks.mp3',
+      path: 'assets/sounds/urban/fireworks.mp3',
       category: '城市',
       icon: Icons.celebration,
     ),
-    Sound(
+    SoundAsset(
       id: 'urban_highway',
       name: 'Highway',
-      url: 'assets/sounds/urban/highway.mp3',
+      path: 'assets/sounds/urban/highway.mp3',
       category: '城市',
       icon: Icons.directions_car,
     ),
-    Sound(
+    SoundAsset(
       id: 'urban_road',
       name: 'Road',
-      url: 'assets/sounds/urban/road.mp3',
+      path: 'assets/sounds/urban/road.mp3',
       category: '城市',
       icon: Icons.route,
     ),
-    Sound(
+    SoundAsset(
       id: 'urban_traffic',
       name: 'Traffic',
-      url: 'assets/sounds/urban/traffic.mp3',
+      path: 'assets/sounds/urban/traffic.mp3',
       category: '城市',
       icon: Icons.traffic,
     ),
 
     // Places sounds
-    Sound(
+    SoundAsset(
       id: 'places_airport',
       name: 'Airport',
-      url: 'assets/sounds/places/airport.mp3',
+      path: 'assets/sounds/places/airport.mp3',
       category: '场所',
       icon: Icons.flight,
     ),
-    Sound(
+    SoundAsset(
       id: 'places_cafe',
       name: 'Cafe',
-      url: 'assets/sounds/places/cafe.mp3',
+      path: 'assets/sounds/places/cafe.mp3',
       category: '场所',
       icon: Icons.local_cafe,
     ),
-    Sound(
+    SoundAsset(
       id: 'places_carousel',
       name: 'Carousel',
-      url: 'assets/sounds/places/carousel.mp3',
+      path: 'assets/sounds/places/carousel.mp3',
       category: '场所',
       icon: Icons.attractions,
     ),
-    Sound(
+    SoundAsset(
       id: 'places_church',
       name: 'Church',
-      url: 'assets/sounds/places/church.mp3',
+      path: 'assets/sounds/places/church.mp3',
       category: '场所',
       icon: Icons.church,
     ),
-    Sound(
+    SoundAsset(
       id: 'places_construction_site',
       name: 'Construction Site',
-      url: 'assets/sounds/places/construction-site.mp3',
+      path: 'assets/sounds/places/construction-site.mp3',
       category: '场所',
       icon: Icons.construction,
     ),
-    Sound(
+    SoundAsset(
       id: 'places_crowded_bar',
       name: 'Crowded Bar',
-      url: 'assets/sounds/places/crowded-bar.mp3',
+      path: 'assets/sounds/places/crowded-bar.mp3',
       category: '场所',
       icon: Icons.local_bar,
     ),
-    Sound(
+    SoundAsset(
       id: 'places_kitchen',
       name: 'Kitchen',
-      url: 'assets/sounds/places/kitchen.ogg',
+      path: 'assets/sounds/places/kitchen.ogg',
       category: '场所',
       icon: Icons.kitchen,
     ),
-    Sound(
+    SoundAsset(
       id: 'places_laboratory',
       name: 'Laboratory',
-      url: 'assets/sounds/places/laboratory.mp3',
+      path: 'assets/sounds/places/laboratory.mp3',
       category: '场所',
       icon: Icons.science,
     ),
-    Sound(
+    SoundAsset(
       id: 'places_laundry_room',
       name: 'Laundry Room',
-      url: 'assets/sounds/places/laundry-room.mp3',
+      path: 'assets/sounds/places/laundry-room.mp3',
       category: '场所',
       icon: Icons.local_laundry_service,
     ),
-    Sound(
+    SoundAsset(
       id: 'places_library',
       name: 'Library',
-      url: 'assets/sounds/places/library.mp3',
+      path: 'assets/sounds/places/library.mp3',
       category: '场所',
       icon: Icons.library_books,
     ),
-    Sound(
+    SoundAsset(
       id: 'places_night_village',
       name: 'Night Village',
-      url: 'assets/sounds/places/night-village.mp3',
+      path: 'assets/sounds/places/night-village.mp3',
       category: '场所',
       icon: Icons.nights_stay,
     ),
-    Sound(
+    SoundAsset(
       id: 'places_office',
       name: 'Office',
-      url: 'assets/sounds/places/office.mp3',
+      path: 'assets/sounds/places/office.mp3',
       category: '场所',
       icon: Icons.computer,
     ),
-    Sound(
+    SoundAsset(
       id: 'places_restaurant',
       name: 'Restaurant',
-      url: 'assets/sounds/places/restaurant.mp3',
+      path: 'assets/sounds/places/restaurant.mp3',
       category: '场所',
       icon: Icons.restaurant,
     ),
-    Sound(
+    SoundAsset(
       id: 'places_subway_station',
       name: 'Subway Station',
-      url: 'assets/sounds/places/subway-station.mp3',
+      path: 'assets/sounds/places/subway-station.mp3',
       category: '场所',
       icon: Icons.train,
     ),
-    Sound(
+    SoundAsset(
       id: 'places_supermarket',
       name: 'Supermarket',
-      url: 'assets/sounds/places/supermarket.mp3',
+      path: 'assets/sounds/places/supermarket.mp3',
       category: '场所',
       icon: Icons.shopping_cart,
     ),
-    Sound(
+    SoundAsset(
       id: 'places_temple',
       name: 'Temple',
-      url: 'assets/sounds/places/temple.mp3',
+      path: 'assets/sounds/places/temple.mp3',
       category: '场所',
       icon: Icons.house,
     ),
-    Sound(
+    SoundAsset(
       id: 'places_underwater',
       name: 'Underwater',
-      url: 'assets/sounds/places/underwater.mp3',
+      path: 'assets/sounds/places/underwater.mp3',
       category: '场所',
       icon: Icons.water,
     ),
 
     // Transport sounds
-    Sound(
+    SoundAsset(
       id: 'transport_airplane',
       name: 'Airplane',
-      url: 'assets/sounds/transport/airplane.mp3',
+      path: 'assets/sounds/transport/airplane.mp3',
       category: '交通',
       icon: Icons.flight,
     ),
-    Sound(
+    SoundAsset(
       id: 'transport_inside_a_train',
       name: 'Inside A Train',
-      url: 'assets/sounds/transport/inside-a-train.mp3',
+      path: 'assets/sounds/transport/inside-a-train.mp3',
       category: '交通',
       icon: Icons.train,
     ),
-    Sound(
+    SoundAsset(
       id: 'transport_rowing_boat',
       name: 'Rowing Boat',
-      url: 'assets/sounds/transport/rowing-boat.mp3',
+      path: 'assets/sounds/transport/rowing-boat.mp3',
       category: '交通',
       icon: Icons.sailing,
     ),
-    Sound(
+    SoundAsset(
       id: 'transport_sailboat',
       name: 'Sailboat',
-      url: 'assets/sounds/transport/sailboat.mp3',
+      path: 'assets/sounds/transport/sailboat.mp3',
       category: '交通',
       icon: Icons.sailing,
     ),
-    Sound(
+    SoundAsset(
       id: 'transport_submarine',
       name: 'Submarine',
-      url: 'assets/sounds/transport/submarine.mp3',
+      path: 'assets/sounds/transport/submarine.mp3',
       category: '交通',
       icon: Icons.directions_boat,
     ),
-    Sound(
+    SoundAsset(
       id: 'transport_train',
       name: 'Train',
-      url: 'assets/sounds/transport/train.mp3',
+      path: 'assets/sounds/transport/train.mp3',
       category: '交通',
       icon: Icons.train,
     ),
 
     // Animals sounds
-    Sound(
+    SoundAsset(
       id: 'animals_beehive',
       name: 'Beehive',
-      url: 'assets/sounds/animals/beehive.ogg',
+      path: 'assets/sounds/animals/beehive.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_birds',
       name: 'Birds',
-      url: 'assets/sounds/animals/birds.ogg',
+      path: 'assets/sounds/animals/birds.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_cat_purring',
       name: 'Cat Purring',
-      url: 'assets/sounds/animals/cat-purring.ogg',
+      path: 'assets/sounds/animals/cat-purring.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_chickens',
       name: 'Chickens',
-      url: 'assets/sounds/animals/chickens.ogg',
+      path: 'assets/sounds/animals/chickens.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_cows',
       name: 'Cows',
-      url: 'assets/sounds/animals/cows.ogg',
+      path: 'assets/sounds/animals/cows.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_crickets',
       name: 'Crickets',
-      url: 'assets/sounds/animals/crickets.ogg',
+      path: 'assets/sounds/animals/crickets.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_crows',
       name: 'Crows',
-      url: 'assets/sounds/animals/crows.ogg',
+      path: 'assets/sounds/animals/crows.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_dog_barking',
       name: 'Dog Barking',
-      url: 'assets/sounds/animals/dog-barking.ogg',
+      path: 'assets/sounds/animals/dog-barking.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_frog',
       name: 'Frog',
-      url: 'assets/sounds/animals/frog.ogg',
+      path: 'assets/sounds/animals/frog.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_horse_gallop',
       name: 'Horse Gallop',
-      url: 'assets/sounds/animals/horse-gallop.ogg',
+      path: 'assets/sounds/animals/horse-gallop.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_owl',
       name: 'Owl',
-      url: 'assets/sounds/animals/owl.ogg',
+      path: 'assets/sounds/animals/owl.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_seagulls',
       name: 'Seagulls',
-      url: 'assets/sounds/animals/seagulls.ogg',
+      path: 'assets/sounds/animals/seagulls.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_sheep',
       name: 'Sheep',
-      url: 'assets/sounds/animals/sheep.ogg',
+      path: 'assets/sounds/animals/sheep.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_whale',
       name: 'Whale',
-      url: 'assets/sounds/animals/whale.ogg',
+      path: 'assets/sounds/animals/whale.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_wolf',
       name: 'Wolf',
-      url: 'assets/sounds/animals/wolf.ogg',
+      path: 'assets/sounds/animals/wolf.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
-    Sound(
+    SoundAsset(
       id: 'animals_woodpecker',
       name: 'Woodpecker',
-      url: 'assets/sounds/animals/woodpecker.ogg',
+      path: 'assets/sounds/animals/woodpecker.ogg',
       category: '动物',
       icon: Icons.pets,
     ),
 
     // Things sounds
-    Sound(
+    SoundAsset(
       id: 'things_boiling_water',
       name: 'Boiling Water',
-      url: 'assets/sounds/things/boiling-water.mp3',
+      path: 'assets/sounds/things/boiling-water.mp3',
       category: '物品',
       icon: Icons.kitchen,
     ),
-    Sound(
+    SoundAsset(
       id: 'things_bubbles',
       name: 'Bubbles',
-      url: 'assets/sounds/things/bubbles.mp3',
+      path: 'assets/sounds/things/bubbles.mp3',
       category: '物品',
       icon: Icons.ac_unit,
     ),
-    Sound(
+    SoundAsset(
       id: 'things_ceiling_fan',
       name: 'Ceiling Fan',
-      url: 'assets/sounds/things/ceiling-fan.mp3',
+      path: 'assets/sounds/things/ceiling-fan.mp3',
       category: '物品',
       icon: Icons.ac_unit,
     ),
-    Sound(
+    SoundAsset(
       id: 'things_clock',
       name: 'Clock',
-      url: 'assets/sounds/things/clock.mp3',
+      path: 'assets/sounds/things/clock.mp3',
       category: '物品',
       icon: Icons.access_time,
     ),
-    Sound(
+    SoundAsset(
       id: 'things_dryer',
       name: 'Dryer',
-      url: 'assets/sounds/things/dryer.mp3',
+      path: 'assets/sounds/things/dryer.mp3',
       category: '物品',
       icon: Icons.local_laundry_service,
     ),
-    Sound(
+    SoundAsset(
       id: 'things_ear_cleaning_1',
       name: 'Ear Cleaning 1',
-      url: 'assets/sounds/things/ear-cleaning-1.mp3',
+      path: 'assets/sounds/things/ear-cleaning-1.mp3',
       category: '物品',
       icon: Icons.hearing,
     ),
-    Sound(
+    SoundAsset(
       id: 'things_ear_cleaning_2',
       name: 'Ear Cleaning 2',
-      url: 'assets/sounds/things/ear-cleaning-2.mp3',
+      path: 'assets/sounds/things/ear-cleaning-2.mp3',
       category: '物品',
       icon: Icons.hearing,
     ),
-    Sound(
+    SoundAsset(
       id: 'things_keyboard',
       name: 'Keyboard',
-      url: 'assets/sounds/things/keyboard.mp3',
+      path: 'assets/sounds/things/keyboard.mp3',
       category: '物品',
       icon: Icons.keyboard,
     ),
-    Sound(
+    SoundAsset(
       id: 'things_morse_code',
       name: 'Morse Code',
-      url: 'assets/sounds/things/morse-code.mp3',
+      path: 'assets/sounds/things/morse-code.mp3',
       category: '物品',
       icon: Icons.code,
     ),
-    Sound(
+    SoundAsset(
       id: 'things_paper',
       name: 'Paper',
-      url: 'assets/sounds/things/paper.mp3',
+      path: 'assets/sounds/things/paper.mp3',
       category: '物品',
       icon: Icons.description,
     ),
-    Sound(
+    SoundAsset(
       id: 'things_singing_bowl',
       name: 'Singing Bowl',
-      url: 'assets/sounds/things/singing-bowl.mp3',
+      path: 'assets/sounds/things/singing-bowl.mp3',
       category: '物品',
       icon: Icons.music_note,
     ),
-    Sound(
+    SoundAsset(
       id: 'things_slide_projector',
       name: 'Slide Projector',
-      url: 'assets/sounds/things/slide-projector.mp3',
+      path: 'assets/sounds/things/slide-projector.mp3',
       category: '物品',
       icon: Icons.slideshow,
     ),
-    Sound(
+    SoundAsset(
       id: 'things_tuning_radio',
       name: 'Tuning Radio',
-      url: 'assets/sounds/things/tuning-radio.mp3',
+      path: 'assets/sounds/things/tuning-radio.mp3',
       category: '物品',
       icon: Icons.radio,
     ),
-    Sound(
+    SoundAsset(
       id: 'things_typewriter',
       name: 'Typewriter',
-      url: 'assets/sounds/things/typewriter.mp3',
+      path: 'assets/sounds/things/typewriter.mp3',
       category: '物品',
       icon: Icons.keyboard,
     ),
-    Sound(
+    SoundAsset(
       id: 'things_vinyl_effect',
       name: 'Vinyl Effect',
-      url: 'assets/sounds/things/vinyl-effect.mp3',
+      path: 'assets/sounds/things/vinyl-effect.mp3',
       category: '物品',
       icon: Icons.album,
     ),
-    Sound(
+    SoundAsset(
       id: 'things_washing_machine',
       name: 'Washing Machine',
-      url: 'assets/sounds/things/washing-machine.mp3',
+      path: 'assets/sounds/things/washing-machine.mp3',
       category: '物品',
       icon: Icons.local_laundry_service,
     ),
-    Sound(
+    SoundAsset(
       id: 'things_wind_chimes',
       name: 'Wind Chimes',
-      url: 'assets/sounds/things/wind-chimes.mp3',
+      path: 'assets/sounds/things/wind-chimes.mp3',
       category: '物品',
       icon: Icons.music_note,
     ),
-    Sound(
+    SoundAsset(
       id: 'things_windshield_wipers',
       name: 'Windshield Wipers',
-      url: 'assets/sounds/things/windshield-wipers.mp3',
+      path: 'assets/sounds/things/windshield-wipers.mp3',
       category: '物品',
       icon: Icons.ac_unit,
     ),
   ];
 
   /// 将文件路径转换为 Sound 对象
-  static Sound? _pathToSound(String path) {
+  static SoundAsset? _pathToSound(String path) {
     // 解析路径: assets/sounds/rain/heavy_rain.ogg
     final parts = path.replaceFirst('assets/sounds/', '').split('/');
     if (parts.length < 2) return null;
@@ -1124,10 +1127,10 @@ class Sound {
     final icon = categoryIcons[category] ?? Icons.audiotrack;
     final categoryName = categoryNames[category] ?? category;
 
-    return Sound(
+    return SoundAsset(
       id: id,
       name: name,
-      url: path,
+      path: path,
       category: categoryName,
       icon: icon,
       description: null,
@@ -1150,7 +1153,7 @@ class Sound {
   /// 所有音频分类（按Android版本顺序排列）
   static const List<String> allCategories = [
     '自然',
-    '雨声', 
+    '雨声',
     '城市',
     '场所',
     '交通',
@@ -1169,7 +1172,7 @@ class Sound {
         categories.add(sound.category);
       }
     }
-    
+
     // 按Android顺序排列，如果分类不在预定义顺序中，则按字母顺序排在后面
     final sortedCategories = <String>['全部'];
     for (final category in allCategories) {
@@ -1178,24 +1181,24 @@ class Sound {
         categories.remove(category);
       }
     }
-    
+
     // 添加剩余的分类（按字母顺序）
     if (categories.isNotEmpty) {
       final remaining = categories.toList()..sort();
       sortedCategories.addAll(remaining);
     }
-    
+
     return sortedCategories;
   }
 
   /// 获取Android版本繁星页的声音列表
-  static List<Sound> getAndroidStarSounds() {
+  static List<SoundAsset> getAndroidStarSounds() {
     return _androidStarSounds;
   }
 
   /// 获取按分类分组的Android繁星页声音
-  static Map<String, List<Sound>> getAndroidStarSoundsByCategory() {
-    final Map<String, List<Sound>> grouped = {};
+  static Map<String, List<SoundAsset>> getAndroidStarSoundsByCategory() {
+    final Map<String, List<SoundAsset>> grouped = {};
     for (final sound in _androidStarSounds) {
       if (!grouped.containsKey(sound.category)) {
         grouped[sound.category] = [];
@@ -1206,17 +1209,17 @@ class Sound {
   }
 
   /// 根据分类筛选
-  static List<Sound> getByCategory(String category) {
+  static List<SoundAsset> getByCategory(String category) {
     if (category == '全部') return _fallbackSounds;
     return _fallbackSounds.where((s) => s.category == category).toList();
   }
 
   /// 从 JSON 创建
-  factory Sound.fromJson(Map<String, dynamic> json) {
-    return Sound(
+  factory SoundAsset.fromJson(Map<String, dynamic> json) {
+    return SoundAsset(
       id: json['id'] as String,
       name: json['name'] as String,
-      url: json['url'] as String,
+      path: json['url'] as String,
       category: json['category'] as String,
       icon: IconData(json['iconCode'] as int, fontFamily: 'MaterialIcons'),
       description: json['description'] as String?,
@@ -1228,7 +1231,7 @@ class Sound {
     return {
       'id': id,
       'name': name,
-      'url': url,
+      'url': path,
       'category': category,
       'iconCode': icon.codePoint,
       'description': description,
@@ -1238,7 +1241,7 @@ class Sound {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is Sound && other.id == id;
+    return other is SoundAsset && other.id == id;
   }
 
   @override

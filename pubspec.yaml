@@ -45,6 +45,7 @@ dependencies:
       url: https://gitcode.com/openharmony-sig/flutter_audioplayers.git
       path: packages/audioplayers
       ref: br_v6.5.0_ohos
+  provider: ^6.1.5+1
 
 dependency_overrides:
   # 修复鸿蒙audioplayers报错
