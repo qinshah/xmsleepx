@@ -455,176 +455,173 @@ class _PlayingListSheetState extends State<PlayingListSheet> {
   @override
   Widget build(BuildContext context) {
     final playingSounds = context.watch<SoundManager>().playingSounds;
-    return SizedBox(
-      height: 320,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            width: double.infinity,
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(color: Theme.of(context).dividerColor),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('正在播放', style: Theme.of(context).textTheme.titleLarge),
-                    Text(
-                      '${playingSounds.length} 个声音',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-                TextButton(
-                  onPressed: () {
-                    SoundManager.i.stopAllSound();
-                    Navigator.pop(context);
-                  },
-                  child: const Text('全部停止'),
-                ),
-              ],
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(16),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(color: Theme.of(context).dividerColor),
             ),
           ),
-          Expanded(
-            child: playingSounds.isEmpty
-                ? Center(child: Text('暂无正在播放的音频'))
-                : ListView.builder(
-                    itemCount: playingSounds.length,
-                    itemBuilder: (context, idx) {
-                      final playingSound = playingSounds[idx];
-                      final soundAsset = playingSound.asset;
-                      return Container(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('正在播放', style: Theme.of(context).textTheme.titleLarge),
+                  Text(
+                    '${playingSounds.length} 个声音',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+              TextButton(
+                onPressed: () {
+                  SoundManager.i.stopAllSound();
+                  Navigator.pop(context);
+                },
+                child: const Text('全部停止'),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: playingSounds.isEmpty
+              ? Center(child: Text('暂无正在播放的音频'))
+              : ListView.builder(
+                  itemCount: playingSounds.length,
+                  itemBuilder: (context, idx) {
+                    final playingSound = playingSounds[idx];
+                    final soundAsset = playingSound.asset;
+                    return Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.surface,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.outline.withOpacity(0.2),
                         ),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surface,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.outline.withOpacity(0.2),
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            ListTile(
-                              leading: Icon(
-                                Icons.audiotrack,
+                      ),
+                      child: Column(
+                        children: [
+                          ListTile(
+                            leading: Icon(
+                              Icons.audiotrack,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                            title: Text(
+                              soundAsset.name,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
                                 color: Theme.of(context).colorScheme.primary,
                               ),
-                              title: Text(
-                                soundAsset.name,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Theme.of(context).colorScheme.primary,
+                            ),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.stop),
+                                  onPressed: () =>
+                                      SoundManager.i.stopSound(playingSound),
                                 ),
-                              ),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.stop),
-                                    onPressed: () =>
-                                        SoundManager.i.stopSound(playingSound),
-                                  ),
-                                ],
-                              ),
+                              ],
                             ),
-                            // 音量调节滑块
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 8,
-                              ),
-                              child: StatefulBuilder(
-                                builder: (context, setVolumeBarState) {
-                                  final volume = playingSound.player.volume;
-                                  return Row(
-                                    children: [
-                                      Icon(
-                                        Icons.volume_down,
-                                        size: 20,
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.onSurfaceVariant,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        child: SliderTheme(
-                                          data: SliderTheme.of(context).copyWith(
-                                            trackHeight: 4,
-                                            thumbShape:
-                                                const RoundSliderThumbShape(
-                                                  enabledThumbRadius: 8,
-                                                ),
-                                            overlayShape:
-                                                const RoundSliderOverlayShape(
-                                                  overlayRadius: 12,
-                                                ),
-                                          ),
-                                          child: Slider(
-                                            value: volume,
-                                            min: 0.0,
-                                            max: 1.0,
-                                            divisions: 20,
-                                            onChanged: (value) {
-                                              setVolumeBarState(() {
-                                                playingSound.player.setVolume(
-                                                  value,
-                                                );
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Icon(
-                                        Icons.volume_up,
-                                        size: 20,
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.onSurfaceVariant,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      SizedBox(
-                                        width: 32,
-                                        child: Text(
-                                          '${(volume * 100).round()}%',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall
-                                              ?.copyWith(
-                                                color: Theme.of(
-                                                  context,
-                                                ).colorScheme.onSurfaceVariant,
-                                                fontWeight: FontWeight.w500,
+                          ),
+                          // 音量调节滑块
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            child: StatefulBuilder(
+                              builder: (context, setVolumeBarState) {
+                                final volume = playingSound.player.volume;
+                                return Row(
+                                  children: [
+                                    Icon(
+                                      Icons.volume_down,
+                                      size: 20,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurfaceVariant,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: SliderTheme(
+                                        data: SliderTheme.of(context).copyWith(
+                                          trackHeight: 4,
+                                          thumbShape:
+                                              const RoundSliderThumbShape(
+                                                enabledThumbRadius: 8,
                                               ),
-                                          textAlign: TextAlign.center,
+                                          overlayShape:
+                                              const RoundSliderOverlayShape(
+                                                overlayRadius: 12,
+                                              ),
+                                        ),
+                                        child: Slider(
+                                          value: volume,
+                                          min: 0.0,
+                                          max: 1.0,
+                                          divisions: 20,
+                                          onChanged: (value) {
+                                            setVolumeBarState(() {
+                                              playingSound.player.setVolume(
+                                                value,
+                                              );
+                                            });
+                                          },
                                         ),
                                       ),
-                                    ],
-                                  );
-                                },
-                              ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Icon(
+                                      Icons.volume_up,
+                                      size: 20,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurfaceVariant,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    SizedBox(
+                                      width: 32,
+                                      child: Text(
+                                        '${(volume * 100).round()}%',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall
+                                            ?.copyWith(
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.onSurfaceVariant,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
                             ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-          ),
-        ],
-      ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+        ),
+      ],
     );
   }
 }

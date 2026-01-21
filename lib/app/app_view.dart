@@ -116,9 +116,9 @@ class _MainPageState extends State<MainPage> {
         },
         destinations: const [
           NavigationDestination(
-            icon: Icon(Icons.local_florist_outlined),
-            selectedIcon: Icon(Icons.local_florist),
-            label: '白噪音',
+            icon: Icon(Icons.my_library_music_outlined),
+            selectedIcon: Icon(Icons.my_library_music),
+            label: '声音',
           ),
           NavigationDestination(
             icon: Icon(Icons.timer_outlined),
