@@ -395,8 +395,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   const SizedBox(height: 16),
                   Slider(
                     value: inDialogVolume,
-                    min: 0,
-                    max: 1,
+                    min: 0.0,
+                    max: 1.0,
                     divisions: 20,
                     onChanged: (value) {
                       setDialogState(() => inDialogVolume = value);

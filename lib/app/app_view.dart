@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:xmsleepx/app/state_mgmt/sound_manager.dart';
 import 'package:xmsleepx/app/theme.dart';
+import 'package:xmsleepx/timed_off/timed_off_page_view.dart';
 import 'package:xmsleepx/ui/home/home_page.dart';
 import 'package:xmsleepx/ui/settings/settings_page.dart';
 
@@ -98,6 +99,7 @@ class _MainPageState extends State<MainPage> {
 
   List<Widget> get _pages => [
     const HomePage(),
+    const TimedOffPageView(),
     SettingsPage(onThemeChanged: widget.onThemeChanged),
   ];
 
@@ -117,6 +119,11 @@ class _MainPageState extends State<MainPage> {
             icon: Icon(Icons.local_florist_outlined),
             selectedIcon: Icon(Icons.local_florist),
             label: '白噪音',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.timer_outlined),
+            selectedIcon: Icon(Icons.timer),
+            label: '定时关闭',
           ),
           NavigationDestination(
             icon: Icon(Icons.settings_outlined),
