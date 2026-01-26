@@ -5,8 +5,7 @@
     "description": "$string:module_desc",
     "mainElement": "EntryAbility",
     "deviceTypes": [
-      "phone",
-      "2in1",
+      "default",
       "tablet"
     ],
     "deliveryWithInstall": true,
@@ -15,7 +14,7 @@
     "abilities": [
       {
         "backgroundModes": [
-          "audioPlayback",
+          "audioPlayback"
         ],
         "name": "EntryAbility",
         "srcEntry": "./ets/entryability/EntryAbility.ets",

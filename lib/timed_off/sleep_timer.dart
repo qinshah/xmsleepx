@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:xmsleepx/app/state_mgmt/sound_manager.dart';
+import 'package:niceleep/app/state_mgmt/sound_manager.dart';
 
 class SleepTimer {
   SleepTimer._();

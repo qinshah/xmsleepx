@@ -5,10 +5,10 @@
 // 'flutter create' template.
 
 // The application's name. By default this is also the title of the Flutter window.
-PRODUCT_NAME = xmsleepx
+PRODUCT_NAME = niceleep
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.qshh.xmsleepx
+PRODUCT_BUNDLE_IDENTIFIER = com.qshh.niceleep
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2026 com.qshh. All rights reserved.

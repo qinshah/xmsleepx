@@ -1,4 +1,4 @@
-# XMSLEEPX
+# NICELEEP
 
 [XMSLEEP](https://github.com/Tosencen/XMSLEEP)的flutter copy版
 

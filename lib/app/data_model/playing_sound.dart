@@ -1,5 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
-import 'package:xmsleepx/app/data_model/sound_asset.dart';
+import 'package:niceleep/app/data_model/sound_asset.dart';
 
 class PlayingSound {
   final SoundAsset asset;

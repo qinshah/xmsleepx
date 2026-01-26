@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:xmsleepx/timed_off/sleep_timer.dart';
+import 'package:niceleep/timed_off/sleep_timer.dart';
 
 class TimedOffPageView extends StatefulWidget {
   const TimedOffPageView({super.key});

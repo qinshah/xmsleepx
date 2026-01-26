@@ -1,7 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:xmsleepx/app/data_model/playing_sound.dart';
-import 'package:xmsleepx/app/data_model/sound_asset.dart';
+import 'package:niceleep/app/data_model/playing_sound.dart';
+import 'package:niceleep/app/data_model/sound_asset.dart';
 
 class SoundManager extends ChangeNotifier {
   SoundManager._();

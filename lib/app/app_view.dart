@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:xmsleepx/app/state_mgmt/sound_manager.dart';
-import 'package:xmsleepx/app/theme.dart';
-import 'package:xmsleepx/timed_off/timed_off_page_view.dart';
-import 'package:xmsleepx/ui/home/home_page.dart';
-import 'package:xmsleepx/ui/settings/settings_page.dart';
+import 'package:niceleep/app/state_mgmt/sound_manager.dart';
+import 'package:niceleep/app/theme.dart';
+import 'package:niceleep/timed_off/timed_off_page_view.dart';
+import 'package:niceleep/ui/home/home_page.dart';
+import 'package:niceleep/ui/settings/settings_page.dart';
 
 class AppView extends StatefulWidget {
   const AppView({super.key});
@@ -56,7 +56,7 @@ class _AppViewState extends State<AppView> {
     return ChangeNotifierProvider.value(
       value: SoundManager.i,
       child: MaterialApp(
-        title: 'XMSleepX',
+        title: 'niceleep',
         theme: _useDynamicColor
             ? ThemeData.light(useMaterial3: true)
             : ThemeData(

@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:xmsleepx/app/data_model/playing_sound.dart';
-import 'package:xmsleepx/app/state_mgmt/sound_manager.dart';
+import 'package:niceleep/app/state_mgmt/sound_manager.dart';
 import '../../app/data_model/sound_asset.dart';
 
 class HomePage extends StatefulWidget {
@@ -92,7 +91,7 @@ class _HomePageState extends State<HomePage> {
           Row(
             children: [
               Text(
-                'XMSleepX',
+                'niceleep',
                 style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).colorScheme.primary,

@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.qshh" "\0"
-            VALUE "FileDescription", "xmsleepx" "\0"
+            VALUE "FileDescription", "niceleep" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "xmsleepx" "\0"
+            VALUE "InternalName", "niceleep" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.qshh. All rights reserved." "\0"
-            VALUE "OriginalFilename", "xmsleepx.exe" "\0"
-            VALUE "ProductName", "xmsleepx" "\0"
+            VALUE "OriginalFilename", "niceleep.exe" "\0"
+            VALUE "ProductName", "niceleep" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

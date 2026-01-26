@@ -255,7 +255,7 @@ packages:
     description:
       path: "packages/file_selector/file_selector_ohos"
       ref: HEAD
-      resolved-ref: "4b714ff0cb8df6a502b66c180272ea4082a7e7c0"
+      resolved-ref: b6d283d565f70c6aac7a241c2daeed10acc2c675
       url: "https://gitcode.com/openharmony-sig/flutter_packages.git"
     source: git
     version: "0.5.0+2"
@@ -326,18 +326,18 @@ packages:
     dependency: "direct main"
     description:
       name: hive_ce
-      sha256: "412c638aeac0f003bba664884e3048b9547e541aaca13f10cc639da788184bed"
+      sha256: b844955c89f61f479170632b971dcf6fbb8e7233d2a5c2e3c7b89e1b2986bdb5
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.16.0"
+    version: "2.19.1"
   hive_ce_flutter:
     dependency: "direct main"
     description:
       name: hive_ce_flutter
-      sha256: "26d656c9e8974f0732f1d09020e2d7b08ba841b8961a02dbfb6caf01474b0e9a"
+      sha256: "2677e95a333ff15af43ccd06af7eb7abbf1a4f154ea071997f3de4346cae913a"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.3.3"
+    version: "2.3.4"
   http:
     dependency: transitive
     description:
@@ -366,10 +366,10 @@ packages:
     dependency: transitive
     description:
       name: isolate_channel
-      sha256: f3d36f783b301e6b312c3450eeb2656b0e7d1db81331af2a151d9083a3f6b18d
+      sha256: "000d617d021a608186b468584bbc6df2509ecba048f08510f832fdb9cf7aafbe"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.2.2+1"
+    version: "0.4.1"
   js:
     dependency: transitive
     description:
@@ -555,7 +555,7 @@ packages:
     description:
       path: "packages/path_provider/path_provider"
       ref: HEAD
-      resolved-ref: "4b714ff0cb8df6a502b66c180272ea4082a7e7c0"
+      resolved-ref: b6d283d565f70c6aac7a241c2daeed10acc2c675
       url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
     source: git
     version: "2.1.0"
@@ -588,7 +588,7 @@ packages:
     description:
       path: "packages/path_provider/path_provider_ohos"
       ref: HEAD
-      resolved-ref: "4b714ff0cb8df6a502b66c180272ea4082a7e7c0"
+      resolved-ref: b6d283d565f70c6aac7a241c2daeed10acc2c675
       url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
     source: git
     version: "2.2.1"
@@ -660,10 +660,10 @@ packages:
     dependency: transitive
     description:
       name: safe_local_storage
-      sha256: e9a21b6fec7a8aa62cc2585ff4c1b127df42f3185adbd2aca66b47abe2e80236
+      sha256: "287ea1f667c0b93cdc127dccc707158e2d81ee59fba0459c31a0c7da4d09c755"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.3"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -702,7 +702,7 @@ packages:
     description:
       path: "packages/shared_preferences/shared_preferences_ohos"
       ref: HEAD
-      resolved-ref: "4b714ff0cb8df6a502b66c180272ea4082a7e7c0"
+      resolved-ref: b6d283d565f70c6aac7a241c2daeed10acc2c675
       url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
     source: git
     version: "2.2.0"
@@ -901,7 +901,7 @@ packages:
     description:
       path: "packages/url_launcher/url_launcher_ohos"
       ref: HEAD
-      resolved-ref: "4b714ff0cb8df6a502b66c180272ea4082a7e7c0"
+      resolved-ref: b6d283d565f70c6aac7a241c2daeed10acc2c675
       url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
     source: git
     version: "6.0.38"
