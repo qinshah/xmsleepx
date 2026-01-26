@@ -55,24 +55,29 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-              _buildHeader(context),
-              const SizedBox(height: 16),
-              _buildCategories(),
-              const SizedBox(height: 16),
-              _isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : _selectedCategory == 0
-                  ? _buildGroupedSoundsGrid()
-                  : _buildSoundsGrid(),
-            ],
+      appBar: AppBar(
+        title: Text(
+          'niceleep',
+          style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.primary,
           ),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 16),
+            _buildCategories(),
+            const SizedBox(height: 16),
+            _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : _selectedCategory == 0
+                ? _buildGroupedSoundsGrid()
+                : _buildSoundsGrid(),
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -82,64 +87,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                'niceleep',
-                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ),
-              const Spacer(),
-              // GitHub 按钮（与Android版本一致）
-              Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surfaceVariant,
-                  shape: BoxShape.circle,
-                ),
-                child: IconButton(
-                  onPressed: () {
-                    // TODO: 打开GitHub链接
-                  },
-                  icon: Icon(
-                    Icons.code,
-                    size: 16,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-                  padding: EdgeInsets.zero,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Container(
-            height: 1,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Theme.of(context).colorScheme.primary.withOpacity(0.3),
-                  Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                  Colors.transparent,
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildCategories() {
-    return Container(
+    return SizedBox(
       height: 48,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
@@ -287,7 +236,6 @@ class SoundCard extends StatelessWidget {
     final playing = context.select<SoundManager, bool>(
       (soundManager) => soundManager.isSoundPlaying(soundAsset),
     );
-    final soundManager = context.read<SoundManager>();
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
@@ -379,7 +327,8 @@ class SoundCard extends StatelessWidget {
                               border: Border.all(color: Colors.white, width: 2),
                             ),
                           ),
-                        ),],
+                        ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 12),
