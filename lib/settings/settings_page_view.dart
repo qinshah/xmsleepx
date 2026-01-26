@@ -2,21 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:niceleep/app/state_mgmt/sound_manager.dart';
-import '../app/theme.dart';
-import 'theme_settings_page.dart';
+import 'package:niceleep/settings/state_mgmt/theme_cntlr.dart';
+import 'package:provider/provider.dart';
+import 'theme_page_view.dart';
 
-class SettingsPage extends StatefulWidget {
-  final VoidCallback? onThemeChanged;
-  const SettingsPage({super.key, this.onThemeChanged});
+class SettingsPageView extends StatefulWidget {
+  const SettingsPageView({super.key});
 
   @override
-  State<SettingsPage> createState() => _SettingsPageState();
+  State<SettingsPageView> createState() => _SettingsPageViewState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _SettingsPageViewState extends State<SettingsPageView> {
   bool _hideAnimation = false;
   String _version = '1.0.0';
-  ThemeMode _themeMode = ThemeMode.system;
   double _globalVolume = 0.5; // 默认音量50%
   bool _isClearingCache = false;
   int _cacheSize = 0;
@@ -29,10 +28,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> _loadSettings() async {
     final packageInfo = await PackageInfo.fromPlatform();
-    final themeMode = await AppTheme.getThemeMode();
     setState(() {
       _version = packageInfo.version;
-      _themeMode = themeMode;
     });
     _calculateCacheSize();
   }
@@ -88,7 +85,7 @@ class _SettingsPageState extends State<SettingsPage> {
         elevation: 0,
         backgroundColor: Theme.of(context).colorScheme.surface,
       ),
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -165,47 +162,50 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget _buildThemeTile(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
-        ),
-      ),
-      child: ListTile(
-        leading: Icon(
-          Icons.palette,
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
-        ),
-        title: Text(
-          '主题模式',
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onSurface,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        subtitle: Text(
-          _getThemeModeText(_themeMode),
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
-        ),
-        trailing: Icon(
-          Icons.chevron_right,
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
-        ),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  ThemeSettingsPage(onThemeChanged: widget.onThemeChanged),
+    return Consumer<ThemeCntlr>(
+      builder: (context, themeCntlr, child) {
+        return Container(
+          margin: const EdgeInsets.symmetric(vertical: 4),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
             ),
-          );
-        },
-      ),
+          ),
+          child: ListTile(
+            leading: Icon(
+              Icons.palette,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+            title: Text(
+              '主题模式',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            subtitle: Text(
+              _getThemeModeText(themeCntlr.themeMode),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
+            trailing: Icon(
+              Icons.chevron_right,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ThemePageView(),
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
@@ -246,7 +246,7 @@ class _SettingsPageState extends State<SettingsPage> {
         trailing: Switch(
           value: value,
           onChanged: onChanged,
-          activeColor: Theme.of(context).colorScheme.primary,
+          activeThumbColor: Theme.of(context).colorScheme.primary,
         ),
       ),
     );

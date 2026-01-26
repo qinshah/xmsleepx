@@ -1,44 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:niceleep/settings/state_mgmt/theme_cntlr.dart';
+import 'package:provider/provider.dart';
 import '../app/theme.dart';
 
-class ThemeSettingsPage extends StatefulWidget {
-  final VoidCallback? onThemeChanged;
-  const ThemeSettingsPage({super.key, this.onThemeChanged});
+class ThemePageView extends StatefulWidget {
+  const ThemePageView({super.key});
 
   @override
-  State<ThemeSettingsPage> createState() => _ThemeSettingsPageState();
+  State<ThemePageView> createState() => _ThemePageViewState();
 }
 
-class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
-  ThemeMode _themeMode = ThemeMode.system;
-  Color _selectedColor = AppTheme.defaultSeedColor;
-  // bool _useDynamicColor = false;
-  bool _useBlackBackground = false;
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadSettings();
-  }
-
-  Future<void> _loadSettings() async {
-    final themeMode = await AppTheme.getThemeMode();
-    final selectedColor = await AppTheme.getSeedColor();
-    // final useDynamicColor = await AppTheme.getUseDynamicColor();
-    final useBlackBackground = await AppTheme.getUseBlackBackground();
-
-    if (mounted) {
-      setState(() {
-        _themeMode = themeMode;
-        _selectedColor = selectedColor;
-        // _useDynamicColor = useDynamicColor;
-        _useBlackBackground = useBlackBackground;
-        _isLoading = false;
-      });
-    }
-  }
-
+class _ThemePageViewState extends State<ThemePageView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,27 +19,27 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
         elevation: 0,
         backgroundColor: Theme.of(context).colorScheme.surface,
       ),
-      backgroundColor: Theme.of(context).colorScheme.background,
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView(
-              padding: const EdgeInsets.all(16),
-              children: [
-                _buildSectionHeader('外观模式'),
-                _buildThemeModeSelector(),
-                const SizedBox(height: 24),
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      body: Consumer<ThemeCntlr>(
+        builder: (context, themeCntlr, child) {
+          return ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              _buildSectionHeader('外观模式'),
+              _buildThemeModeSelector(themeCntlr),
+              const SizedBox(height: 24),
 
-                _buildSectionHeader('主题设置'),
-                _buildDynamicColorSwitch(),
-                const SizedBox(height: 16),
-                _buildBlackBackgroundSwitch(),
-                const SizedBox(height: 24),
+              _buildSectionHeader('主题设置'),
+              _buildBlackBackgroundSwitch(themeCntlr),
+              const SizedBox(height: 24),
 
-                _buildSectionHeader('调色板'),
-                _buildColorPalette(),
-                const SizedBox(height: 32),
-              ],
-            ),
+              _buildSectionHeader('调色板'),
+              _buildColorPalette(themeCntlr),
+              const SizedBox(height: 32),
+            ],
+          );
+        },
+      ),
     );
   }
 
@@ -85,21 +57,22 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
     );
   }
 
-  Widget _buildThemeModeSelector() {
+  Widget _buildThemeModeSelector(ThemeCntlr themeCntlr) {
     return SizedBox(
       height: 180,
       child: Row(
         children: [
           Expanded(
-            child: _buildThemeOption(ThemeMode.light, '浅色模式', Icons.light_mode),
+            child: _buildThemeOption(themeCntlr, ThemeMode.light, '浅色模式', Icons.light_mode),
           ),
           const SizedBox(width: 16),
           Expanded(
-            child: _buildThemeOption(ThemeMode.dark, '深色模式', Icons.dark_mode),
+            child: _buildThemeOption(themeCntlr, ThemeMode.dark, '深色模式', Icons.dark_mode),
           ),
           const SizedBox(width: 16),
           Expanded(
             child: _buildThemeOption(
+              themeCntlr,
               ThemeMode.system,
               '跟随系统',
               Icons.brightness_auto,
@@ -110,16 +83,10 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
     );
   }
 
-  Widget _buildThemeOption(ThemeMode mode, String title, IconData icon) {
-    final isSelected = _themeMode == mode;
+  Widget _buildThemeOption(ThemeCntlr themeCntlr, ThemeMode mode, String title, IconData icon) {
+    final isSelected = themeCntlr.themeMode == mode;
     return GestureDetector(
-      onTap: () async {
-        await AppTheme.setThemeMode(mode);
-        setState(() {
-          _themeMode = mode;
-        });
-        widget.onThemeChanged?.call();
-      },
+      onTap: () => themeCntlr.setThemeMode(mode),
       child: Container(
         height: 160,
         decoration: BoxDecoration(
@@ -130,7 +97,7 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
           border: Border.all(
             color: isSelected
                 ? Theme.of(context).colorScheme.primary
-                : Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                : Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
             width: 2,
           ),
         ),
@@ -143,7 +110,7 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
               decoration: BoxDecoration(
                 color: isSelected
                     ? Theme.of(context).colorScheme.primary
-                    : Theme.of(context).colorScheme.surfaceVariant,
+                    : Theme.of(context).colorScheme.surfaceContainerHighest,
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -174,7 +141,7 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
                 border: Border.all(
                   color: isSelected
                       ? Theme.of(context).colorScheme.primary
-                      : Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                      : Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
                   width: 2,
                 ),
               ),
@@ -192,57 +159,14 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
     );
   }
 
-  Widget _buildDynamicColorSwitch() {
+  Widget _buildBlackBackgroundSwitch(ThemeCntlr themeCntlr) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
-        ),
-      ),
-      // child: ListTile(
-      //   leading: Icon(
-      //     Icons.palette,
-      //     color: Theme.of(context).colorScheme.onSurfaceVariant,
-      //   ),
-      //   title: Text(
-      //     '动态颜色',
-      //     style: TextStyle(
-      //       color: Theme.of(context).colorScheme.onSurface,
-      //       fontWeight: FontWeight.w500,
-      //     ),
-      //   ),
-      //   subtitle: Text(
-      //     '使用壁纸颜色作为主题',
-      //     style: TextStyle(
-      //       color: Theme.of(context).colorScheme.onSurfaceVariant,
-      //     ),
-      //   ),
-      //   trailing: Switch(
-      //     value: _useDynamicColor,
-      //     onChanged: (value) async {
-      //       await AppTheme.setUseDynamicColor(value);
-      //       setState(() {
-      //         _useDynamicColor = value;
-      //       });
-      //       widget.onThemeChanged?.call();
-      //     },
-      //     activeColor: Theme.of(context).colorScheme.primary,
-      //   ),
-      // ),
-    );
-  }
-
-  Widget _buildBlackBackgroundSwitch() {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
         ),
       ),
       child: ListTile(
@@ -264,21 +188,15 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
           ),
         ),
         trailing: Switch(
-          value: _useBlackBackground,
-          onChanged: (value) async {
-            await AppTheme.setUseBlackBackground(value);
-            setState(() {
-              _useBlackBackground = value;
-            });
-            widget.onThemeChanged?.call();
-          },
-          activeColor: Theme.of(context).colorScheme.primary,
+          value: themeCntlr.useBlackBackground,
+          onChanged: (value) => themeCntlr.setUseBlackBackground(value),
+          activeThumbColor: Theme.of(context).colorScheme.primary,
         ),
       ),
     );
   }
 
-  Widget _buildColorPalette() {
+  Widget _buildColorPalette(ThemeCntlr themeCntlr) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -295,15 +213,9 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
           spacing: 12,
           runSpacing: 12,
           children: AppTheme.presetColors.map((color) {
-            final isSelected = _selectedColor == color;
+            final isSelected = themeCntlr.seedColor == color;
             return GestureDetector(
-              onTap: () async {
-                await AppTheme.setSeedColor(color);
-                setState(() {
-                  _selectedColor = color;
-                });
-                widget.onThemeChanged?.call();
-              },
+              onTap: () => themeCntlr.setSeedColor(color),
               child: Container(
                 width: 48,
                 height: 48,
