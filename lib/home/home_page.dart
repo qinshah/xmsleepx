@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:niceleep/app/state_mgmt/sound_manager.dart';
-import '../../app/data_model/sound_asset.dart';
+import '../app/data_model/sound_asset.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -379,37 +379,7 @@ class SoundCard extends StatelessWidget {
                               border: Border.all(color: Colors.white, width: 2),
                             ),
                           ),
-                        ),
-                      // 快速停止按钮（移除暂停功能）
-                      Positioned(
-                        bottom: -4,
-                        right: -4,
-                        child: GestureDetector(
-                          onTap: () => soundManager.onTapSound(soundAsset),
-                          child: Container(
-                            width: 28,
-                            height: 28,
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white, width: 2),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: Icon(
-                              Icons.stop,
-                              size: 14,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                        ),],
                   ),
                 ),
                 const SizedBox(height: 12),

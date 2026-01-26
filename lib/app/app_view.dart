@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:niceleep/app/state_mgmt/sound_manager.dart';
 import 'package:niceleep/app/theme.dart';
 import 'package:niceleep/timed_off/timed_off_page_view.dart';
-import 'package:niceleep/ui/home/home_page.dart';
-import 'package:niceleep/ui/settings/settings_page.dart';
+import 'package:niceleep/home/home_page.dart';
+import 'package:niceleep/settings/settings_page.dart';
 
 class AppView extends StatefulWidget {
   const AppView({super.key});
@@ -16,7 +16,6 @@ class AppView extends StatefulWidget {
 class _AppViewState extends State<AppView> {
   ThemeMode _themeMode = ThemeMode.system;
   Color _seedColor = AppTheme.defaultSeedColor;
-  bool _useDynamicColor = false;
   bool _useBlackBackground = false;
 
   @override
@@ -34,14 +33,12 @@ class _AppViewState extends State<AppView> {
   Future<void> _loadThemeSettings() async {
     final mode = await AppTheme.getThemeMode();
     final seedColor = await AppTheme.getSeedColor();
-    final useDynamicColor = await AppTheme.getUseDynamicColor();
     final useBlackBackground = await AppTheme.getUseBlackBackground();
 
     if (mounted) {
       setState(() {
         _themeMode = mode;
         _seedColor = seedColor;
-        _useDynamicColor = useDynamicColor;
         _useBlackBackground = useBlackBackground;
       });
     }
@@ -57,27 +54,21 @@ class _AppViewState extends State<AppView> {
       value: SoundManager.i,
       child: MaterialApp(
         title: 'niceleep',
-        theme: _useDynamicColor
-            ? ThemeData.light(useMaterial3: true)
-            : ThemeData(
-                useMaterial3: true,
-                colorScheme: ColorScheme.fromSeed(
-                  seedColor: _seedColor,
-                  brightness: Brightness.light,
-                ),
-              ),
-        darkTheme: _useDynamicColor
-            ? ThemeData.dark(useMaterial3: true)
-            : ThemeData(
-                useMaterial3: true,
-                colorScheme: ColorScheme.fromSeed(
-                  seedColor: _seedColor,
-                  brightness: _useBlackBackground
-                      ? Brightness.dark
-                      : Brightness.dark,
-                  surface: _useBlackBackground ? Colors.black : null,
-                ),
-              ),
+        theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: _seedColor,
+            brightness: Brightness.light,
+          ),
+        ),
+        darkTheme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: _seedColor,
+            brightness: _useBlackBackground ? Brightness.dark : Brightness.dark,
+            surface: _useBlackBackground ? Colors.black : null,
+          ),
+        ),
         themeMode: _themeMode,
         home: MainPage(onThemeChanged: _updateTheme),
       ),

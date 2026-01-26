@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../app/theme.dart';
+import '../app/theme.dart';
 
 class ThemeSettingsPage extends StatefulWidget {
   final VoidCallback? onThemeChanged;
@@ -12,7 +12,7 @@ class ThemeSettingsPage extends StatefulWidget {
 class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
   ThemeMode _themeMode = ThemeMode.system;
   Color _selectedColor = AppTheme.defaultSeedColor;
-  bool _useDynamicColor = false;
+  // bool _useDynamicColor = false;
   bool _useBlackBackground = false;
   bool _isLoading = true;
 
@@ -25,14 +25,14 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
   Future<void> _loadSettings() async {
     final themeMode = await AppTheme.getThemeMode();
     final selectedColor = await AppTheme.getSeedColor();
-    final useDynamicColor = await AppTheme.getUseDynamicColor();
+    // final useDynamicColor = await AppTheme.getUseDynamicColor();
     final useBlackBackground = await AppTheme.getUseBlackBackground();
 
     if (mounted) {
       setState(() {
         _themeMode = themeMode;
         _selectedColor = selectedColor;
-        _useDynamicColor = useDynamicColor;
+        // _useDynamicColor = useDynamicColor;
         _useBlackBackground = useBlackBackground;
         _isLoading = false;
       });
@@ -56,13 +56,13 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
                 _buildSectionHeader('外观模式'),
                 _buildThemeModeSelector(),
                 const SizedBox(height: 24),
-                
+
                 _buildSectionHeader('主题设置'),
                 _buildDynamicColorSwitch(),
                 const SizedBox(height: 16),
                 _buildBlackBackgroundSwitch(),
                 const SizedBox(height: 24),
-                
+
                 _buildSectionHeader('调色板'),
                 _buildColorPalette(),
                 const SizedBox(height: 32),
@@ -86,15 +86,25 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
   }
 
   Widget _buildThemeModeSelector() {
-    return Container(
+    return SizedBox(
       height: 180,
       child: Row(
         children: [
-          Expanded(child: _buildThemeOption(ThemeMode.light, '浅色模式', Icons.light_mode)),
+          Expanded(
+            child: _buildThemeOption(ThemeMode.light, '浅色模式', Icons.light_mode),
+          ),
           const SizedBox(width: 16),
-          Expanded(child: _buildThemeOption(ThemeMode.dark, '深色模式', Icons.dark_mode)),
+          Expanded(
+            child: _buildThemeOption(ThemeMode.dark, '深色模式', Icons.dark_mode),
+          ),
           const SizedBox(width: 16),
-          Expanded(child: _buildThemeOption(ThemeMode.system, '跟随系统', Icons.brightness_auto)),
+          Expanded(
+            child: _buildThemeOption(
+              ThemeMode.system,
+              '跟随系统',
+              Icons.brightness_auto,
+            ),
+          ),
         ],
       ),
     );
@@ -113,12 +123,12 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
       child: Container(
         height: 160,
         decoration: BoxDecoration(
-          color: isSelected 
+          color: isSelected
               ? Theme.of(context).colorScheme.primaryContainer
               : Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isSelected 
+            color: isSelected
                 ? Theme.of(context).colorScheme.primary
                 : Theme.of(context).colorScheme.outline.withOpacity(0.2),
             width: 2,
@@ -131,7 +141,7 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: isSelected 
+                color: isSelected
                     ? Theme.of(context).colorScheme.primary
                     : Theme.of(context).colorScheme.surfaceVariant,
                 shape: BoxShape.circle,
@@ -139,7 +149,7 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
               child: Icon(
                 icon,
                 size: 24,
-                color: isSelected 
+                color: isSelected
                     ? Theme.of(context).colorScheme.onPrimary
                     : Theme.of(context).colorScheme.onSurfaceVariant,
               ),
@@ -149,7 +159,7 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
               title,
               style: TextStyle(
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                color: isSelected 
+                color: isSelected
                     ? Theme.of(context).colorScheme.primary
                     : Theme.of(context).colorScheme.onSurface,
                 fontSize: 14,
@@ -162,7 +172,7 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isSelected 
+                  color: isSelected
                       ? Theme.of(context).colorScheme.primary
                       : Theme.of(context).colorScheme.outline.withOpacity(0.3),
                   width: 2,
@@ -192,36 +202,36 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
           color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
         ),
       ),
-      child: ListTile(
-        leading: Icon(
-          Icons.palette,
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
-        ),
-        title: Text(
-          '动态颜色',
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onSurface,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        subtitle: Text(
-          '使用壁纸颜色作为主题',
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
-        ),
-        trailing: Switch(
-          value: _useDynamicColor,
-          onChanged: (value) async {
-            await AppTheme.setUseDynamicColor(value);
-            setState(() {
-              _useDynamicColor = value;
-            });
-            widget.onThemeChanged?.call();
-          },
-          activeColor: Theme.of(context).colorScheme.primary,
-        ),
-      ),
+      // child: ListTile(
+      //   leading: Icon(
+      //     Icons.palette,
+      //     color: Theme.of(context).colorScheme.onSurfaceVariant,
+      //   ),
+      //   title: Text(
+      //     '动态颜色',
+      //     style: TextStyle(
+      //       color: Theme.of(context).colorScheme.onSurface,
+      //       fontWeight: FontWeight.w500,
+      //     ),
+      //   ),
+      //   subtitle: Text(
+      //     '使用壁纸颜色作为主题',
+      //     style: TextStyle(
+      //       color: Theme.of(context).colorScheme.onSurfaceVariant,
+      //     ),
+      //   ),
+      //   trailing: Switch(
+      //     value: _useDynamicColor,
+      //     onChanged: (value) async {
+      //       await AppTheme.setUseDynamicColor(value);
+      //       setState(() {
+      //         _useDynamicColor = value;
+      //       });
+      //       widget.onThemeChanged?.call();
+      //     },
+      //     activeColor: Theme.of(context).colorScheme.primary,
+      //   ),
+      // ),
     );
   }
 
@@ -269,72 +279,56 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
   }
 
   Widget _buildColorPalette() {
-    return Opacity(
-      opacity: _useDynamicColor ? 0.5 : 1.0,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '选择主题色',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: _useDynamicColor 
-                  ? Theme.of(context).colorScheme.onSurface.withOpacity(0.5)
-                  : Theme.of(context).colorScheme.onSurface,
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '选择主题色',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
-          const SizedBox(height: 16),
-          Wrap(
-            spacing: 12,
-            runSpacing: 12,
-            children: AppTheme.presetColors.map((color) {
-              final isSelected = _selectedColor == color && !_useDynamicColor;
-              return GestureDetector(
-                onTap: _useDynamicColor ? null : () async {
-                  await AppTheme.setSeedColor(color);
-                  setState(() {
-                    _selectedColor = color;
-                  });
-                  widget.onThemeChanged?.call();
-                },
-                child: Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: color,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: isSelected 
-                          ? Theme.of(context).colorScheme.primary
-                          : Colors.transparent,
-                      width: 3,
-                    ),
+        ),
+        const SizedBox(height: 16),
+        Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          children: AppTheme.presetColors.map((color) {
+            final isSelected = _selectedColor == color;
+            return GestureDetector(
+              onTap: () async {
+                await AppTheme.setSeedColor(color);
+                setState(() {
+                  _selectedColor = color;
+                });
+                widget.onThemeChanged?.call();
+              },
+              child: Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: color,
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: isSelected
+                        ? Theme.of(context).colorScheme.primary
+                        : Colors.transparent,
+                    width: 3,
                   ),
-                  child: isSelected
-                      ? Icon(
-                          Icons.check,
-                          color: _getContrastColor(color),
-                          size: 24,
-                        )
-                      : null,
                 ),
-              );
-            }).toList(),
-          ),
-          if (_useDynamicColor)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Text(
-                '使用动态颜色时无法手动选择主题色',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
+                child: isSelected
+                    ? Icon(
+                        Icons.check,
+                        color: _getContrastColor(color),
+                        size: 24,
+                      )
+                    : null,
               ),
-            ),
-        ],
-      ),
+            );
+          }).toList(),
+        ),
+      ],
     );
   }
 
