@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:niceleep/app/constant.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:niceleep/app/state_mgmt/sound_manager.dart';
@@ -61,7 +62,7 @@ class _SettingsPageViewState extends State<SettingsPageView> {
 
           _buildSectionHeader('其他'),
           _buildListTile(
-            icon: Icons.info,
+            icon: Icons.info_outline,
             title: '版本',
             subtitle: _version,
             onTap: () {},
@@ -76,11 +77,16 @@ class _SettingsPageViewState extends State<SettingsPageView> {
           //   title: '使用条款',
           //   onTap: () => _launchUrl('https://example.com/terms'),
           // ),
-          // _buildListTile(
-          //   icon: Icons.feedback,
-          //   title: '意见反馈',
-          //   onTap: () => _launchUrl('https://example.com/feedback'),
-          // ),
+          _buildListTile(
+            title: '开源',
+            icon: Icons.code,
+            onTap: () => _launchUrl(Constant.github),
+          ),
+          _buildListTile(
+            title: '意见反馈',
+            icon: Icons.feedback_outlined,
+            onTap: () => _launchUrl(Constant.issues),
+          ),
         ],
       ),
     );
@@ -356,7 +362,7 @@ class _SettingsPageViewState extends State<SettingsPageView> {
   Future<void> _launchUrl(String url) async {
     final uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
     }
   }
 }

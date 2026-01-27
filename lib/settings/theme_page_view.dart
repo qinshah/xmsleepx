@@ -209,36 +209,38 @@ class _ThemePageViewState extends State<ThemePageView> {
           ),
         ),
         const SizedBox(height: 16),
-        Wrap(
-          spacing: 12,
-          runSpacing: 12,
-          children: AppTheme.presetColors.map((color) {
-            final isSelected = themeCntlr.seedColor == color;
-            return GestureDetector(
-              onTap: () => themeCntlr.setSeedColor(color),
-              child: Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: isSelected
-                        ? Theme.of(context).colorScheme.primary
-                        : Colors.transparent,
-                    width: 3,
+        Center(
+          child: Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            children: AppTheme.presetColors.map((color) {
+              final isSelected = themeCntlr.seedColor == color;
+              return GestureDetector(
+                onTap: () => themeCntlr.setSeedColor(color),
+                child: Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: isSelected
+                          ? Theme.of(context).colorScheme.primary
+                          : Colors.transparent,
+                      width: 3,
+                    ),
                   ),
+                  child: isSelected
+                      ? Icon(
+                          Icons.check,
+                          color: _getContrastColor(color),
+                          size: 24,
+                        )
+                      : null,
                 ),
-                child: isSelected
-                    ? Icon(
-                        Icons.check,
-                        color: _getContrastColor(color),
-                        size: 24,
-                      )
-                    : null,
-              ),
-            );
-          }).toList(),
+              );
+            }).toList(),
+          ),
         ),
       ],
     );
