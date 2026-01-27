@@ -68,13 +68,8 @@ class _SettingsPageViewState extends State<SettingsPageView> {
             onTap: () {},
           ),
           // _buildListTile(
-          //   icon: Icons.privacy_tip,
-          //   title: '隐私政策',
-          //   onTap: () => _launchUrl('https://example.com/privacy'),
-          // ),
-          // _buildListTile(
           //   icon: Icons.description,
-          //   title: '使用条款',
+          //   title: '用户协议',
           //   onTap: () => _launchUrl('https://example.com/terms'),
           // ),
           _buildListTile(
@@ -86,6 +81,11 @@ class _SettingsPageViewState extends State<SettingsPageView> {
             title: '意见反馈',
             icon: Icons.feedback_outlined,
             onTap: () => _launchUrl(Constant.issues),
+          ),
+          _buildListTile(
+            icon: Icons.privacy_tip_outlined,
+            title: '隐私政策',
+            onTap: () => _launchUrl(Constant.privacy),
           ),
         ],
       ),
