@@ -63,11 +63,21 @@ class _ThemePageViewState extends State<ThemePageView> {
       child: Row(
         children: [
           Expanded(
-            child: _buildThemeOption(themeCntlr, ThemeMode.light, '浅色模式', Icons.light_mode),
+            child: _buildThemeOption(
+              themeCntlr,
+              ThemeMode.light,
+              '浅色模式',
+              Icons.light_mode,
+            ),
           ),
           const SizedBox(width: 16),
           Expanded(
-            child: _buildThemeOption(themeCntlr, ThemeMode.dark, '深色模式', Icons.dark_mode),
+            child: _buildThemeOption(
+              themeCntlr,
+              ThemeMode.dark,
+              '深色模式',
+              Icons.dark_mode,
+            ),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -83,7 +93,12 @@ class _ThemePageViewState extends State<ThemePageView> {
     );
   }
 
-  Widget _buildThemeOption(ThemeCntlr themeCntlr, ThemeMode mode, String title, IconData icon) {
+  Widget _buildThemeOption(
+    ThemeCntlr themeCntlr,
+    ThemeMode mode,
+    String title,
+    IconData icon,
+  ) {
     final isSelected = themeCntlr.themeMode == mode;
     return GestureDetector(
       onTap: () => themeCntlr.setThemeMode(mode),
@@ -141,7 +156,9 @@ class _ThemePageViewState extends State<ThemePageView> {
                 border: Border.all(
                   color: isSelected
                       ? Theme.of(context).colorScheme.primary
-                      : Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
+                      : Theme.of(
+                          context,
+                        ).colorScheme.outline.withValues(alpha: 0.3),
                   width: 2,
                 ),
               ),
@@ -211,32 +228,76 @@ class _ThemePageViewState extends State<ThemePageView> {
         const SizedBox(height: 16),
         Center(
           child: Wrap(
-            spacing: 12,
-            runSpacing: 12,
-            children: AppTheme.presetColors.map((color) {
+            spacing: 8,
+            runSpacing: 16,
+            children: ThemeColor.values.map((themeColor) {
+              final color = themeColor.value;
               final isSelected = themeCntlr.seedColor == color;
               return GestureDetector(
                 onTap: () => themeCntlr.setSeedColor(color),
                 child: Container(
-                  width: 48,
-                  height: 48,
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: color,
-                    shape: BoxShape.circle,
+                    color: color.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(16),
                     border: Border.all(
                       color: isSelected
                           ? Theme.of(context).colorScheme.primary
-                          : Colors.transparent,
-                      width: 3,
+                          : Theme.of(
+                              context,
+                            ).colorScheme.outline.withValues(alpha: 0.2),
+                      width: 2,
                     ),
                   ),
-                  child: isSelected
-                      ? Icon(
-                          Icons.check,
-                          color: _getContrastColor(color),
-                          size: 24,
-                        )
-                      : null,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: color,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        themeColor.name,
+                        style: TextStyle(
+                          fontWeight: isSelected
+                              ? FontWeight.w600
+                              : FontWeight.w500,
+                          color: isSelected
+                              ? Theme.of(context).colorScheme.primary
+                              : Theme.of(context).colorScheme.onSurface,
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Container(
+                        width: 18,
+                        height: 18,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: isSelected
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(
+                                    context,
+                                  ).colorScheme.outline.withValues(alpha: 0.3),
+                            width: 2,
+                          ),
+                        ),
+                        child: isSelected
+                            ? Icon(
+                                Icons.check,
+                                size: 10,
+                                color: Theme.of(context).colorScheme.primary,
+                              )
+                            : null,
+                      ),
+                    ],
+                  ),
                 ),
               );
             }).toList(),

@@ -280,35 +280,35 @@ class _SettingsPageViewState extends State<SettingsPageView> {
     }
   }
 
-  void _showLanguageSelectionDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('选择语言'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: const Icon(Icons.language),
-                title: const Text('简体中文'),
-                trailing: const Icon(Icons.check, color: Colors.blue),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('确定'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // void _showLanguageSelectionDialog(BuildContext context) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         title: const Text('选择语言'),
+  //         content: Column(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             ListTile(
+  //               leading: const Icon(Icons.language),
+  //               title: const Text('简体中文'),
+  //               trailing: const Icon(Icons.check, color: Colors.blue),
+  //               onTap: () {
+  //                 Navigator.pop(context);
+  //               },
+  //             ),
+  //           ],
+  //         ),
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () => Navigator.pop(context),
+  //             child: const Text('确定'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   void _showVolumeAdjustDialog(BuildContext context) {
     showDialog(
