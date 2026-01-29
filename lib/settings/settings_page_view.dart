@@ -24,15 +24,10 @@ class _SettingsPageViewState extends State<SettingsPageView> {
   }
 
   Future<void> _loadSettings() async {
-    try {
-      final packageInfo = await PackageInfo.fromPlatform();
-      print('version ${packageInfo.version}');
-      setState(() {
-        _version = packageInfo.version;
-      });
-    } catch (e) {
-      print('Error loading version: $e');
-    }
+    final packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      _version = packageInfo.version;
+    });
   }
 
   @override
@@ -52,33 +47,27 @@ class _SettingsPageViewState extends State<SettingsPageView> {
           const SizedBox(height: 24),
 
           _buildSectionHeader('系统'),
-          _buildListTile(
-            icon: Icons.language,
-            title: '语言',
-            subtitle: '简体中文',
-            onTap: () => _showLanguageSelectionDialog(context),
-          ),
+          // _buildListTile(
+          //   icon: Icons.language,
+          //   title: '语言',
+          //   subtitle: '简体中文',
+          //   onTap: () => _showLanguageSelectionDialog(context),
+          // ),
           _buildVolumeTile(context),
 
           _buildSectionHeader('其他'),
-          _buildListTile(
-            icon: Icons.info_outline,
-            title: '版本',
-            subtitle: _version,
-            onTap: () {},
-          ),
           // _buildListTile(
           //   icon: Icons.description,
           //   title: '用户协议',
           //   onTap: () => _launchUrl('https://example.com/terms'),
           // ),
           _buildListTile(
-            title: '开源',
+            title: 'Source Code',
             icon: Icons.code,
             onTap: () => _launchUrl(Constant.github),
           ),
           _buildListTile(
-            title: '意见反馈',
+            title: '反馈',
             icon: Icons.feedback_outlined,
             onTap: () => _launchUrl(Constant.issues),
           ),
@@ -86,6 +75,10 @@ class _SettingsPageViewState extends State<SettingsPageView> {
             icon: Icons.privacy_tip_outlined,
             title: '隐私政策',
             onTap: () => _launchUrl(Constant.privacy),
+          ),
+          SizedBox(height: 16),
+          Center(
+            child: Text('版本:$_version', style: TextStyle(color: Colors.grey)),
           ),
         ],
       ),
@@ -266,7 +259,7 @@ class _SettingsPageViewState extends State<SettingsPageView> {
           ),
         ),
         subtitle: Text(
-          '统一调整所有正在播放声音的音量',
+          '统一调整音量',
           style: TextStyle(
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),

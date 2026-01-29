@@ -3,7 +3,7 @@ abstract class Constant {
 
   static const issues = '$github/issues';
 
-  static const privacy = 'https://agreement-drcn.hispace.dbankcloud.cn/index.html?lang=zh&agreementId=1872450056385254720';
+  static const privacy = 'https://agreement-drcn.hispace.dbankcloud.cn/index.html?lang=zh&agreementId=1873868493217125696';
 
   // static const userAgreement = 'https://agreement-drcn.hispace.dbankcloud.cn/index.html?lang=zh&agreementId=1872450056385254720';
 }

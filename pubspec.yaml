@@ -44,6 +44,7 @@ dependencies:
       ref: br_v6.5.0_ohos
   provider: ^6.1.5+1
   icons_launcher: ^3.0.3
+  package_info_plus: # app信息.鸿蒙适配
 
 dependency_overrides:
   package_info_plus: # app信息.鸿蒙适配
